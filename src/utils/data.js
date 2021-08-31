@@ -5,12 +5,17 @@ export const toUniqueArray = (a) => {
     let newArr = [];
     for (let index = 0; index < a.length; index++) {
         if (newArr.length === 0) {
-            newArr.push({title: a[index].title, url: a[index].imageUrl });
+            newArr.push({title: a[index].title, url: a[index].imageUrl, id: a[index].col_id });
         } else {
            if ( newArr.filter( item => item.title === a[index].title).length === 0 ) {
-               newArr.push({title: a[index].title, url: a[index].imageUrl });
+               newArr.push({title: a[index].title, url: a[index].imageUrl, id: a[index].col_id });
            }
         }
     }
   return newArr;
 }
+
+export const getListOfCategory = (id) => {
+    return data.filter((item) => item.col_id === id);
+}
+  

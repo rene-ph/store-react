@@ -1,12 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Home from './pages/Home';
+import CategoryList from './pages/CategoryList';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import store   from './store'
+import { Provider } from 'react-redux'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+     <Provider store={store}>
+        <Router>
+          <Switch>
+              <Route exact path='/' name='Home' component={Home}/>       
+              <Route path='/directory/:id' name='CategoryList' component={CategoryList}/>
+          </Switch>
+        </Router>
+     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
