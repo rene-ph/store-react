@@ -1,8 +1,8 @@
-import Navbar from '../components/Navbar/Navbar';
-import Categorycard from '../components/CategoryCard/CategoryCard';
-import Carousel from '../components/Carousel/Carousel';
+import Navbar from '../../components/Navbar/Navbar';
+import Categorycard from '../../components/CategoryCard/CategoryCard';
+import Carousel from '../../components/Carousel/Carousel';
 import Grid from '@material-ui/core/Grid';
-import { data, toUniqueArray } from '../utils/data';
+import { data, toUniqueArray } from '../../utils/data';
 
 const Home = () => {
     const categories = toUniqueArray(data);

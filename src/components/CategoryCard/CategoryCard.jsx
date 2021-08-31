@@ -4,23 +4,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: theme.spacing(3),
-        backgroundColor: 'white',
-        backgroundRepeat: 'no-repeat',
-        '& a': {
-            display: 'block'
-        }
-    },
-    image: {
-        height: '360px',
-        cursor: 'pointer',
-        marginBottom: '1rem'
-    }
-}));
+import useStyles from './CategoryCard.styles';
 
 const CategoryCard = (props) => {
    

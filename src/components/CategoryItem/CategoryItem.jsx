@@ -3,29 +3,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import useStyles  from './CategoryItem.styles';
 import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
-import { useSelector, useDispatch } from 'react-redux';
-import { add, remove } from '../../redux/cartSlice';
-
-const useStyles = makeStyles({
-    root: {
-      textAlign: 'center',
-      fontSize: '18px',
-      '& h3': {
-          margin: 0
-      }
-    },
-    media: {
-      height: 360,
-    },
-    price: {
-        fontSize: '25px',
-        color: '#666',
-        display: 'block',
-        paddingLeft: '2rem',
-    }
-});
+import { useDispatch } from 'react-redux';
+import { add } from '../../redux/cartSlice';
 
 const CategoryItem = (props) => {
     const classes = useStyles();

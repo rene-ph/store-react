@@ -3,16 +3,19 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import Typography from '@material-ui/core/Typography';
-import useStyles from '../components/styles-components/useStyles';
+import useStyles from '../SignUp/Signup.style';
 import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
 
 const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/gm;
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/g;
+const displayNameRegex = /^[a-zA-Z0-9]{3,15}$/g;
 
-const SignIn = () => {
+
+const SignUp = () => {
   const classes = useStyles();
 
   const initialFormValues = {
@@ -32,6 +35,7 @@ const SignIn = () => {
   const [values, setValues] = useState(initialFormValues);
   const [email, setEmail] = useState(Object.assign({}, field));
   const [password, setPassword] = useState(Object.assign({}, field));
+  const [display, setDisplay] = useState(Object.assign({}, field));
 
   const handleInputPassword = (event) => {
     const value = event.target.value;
@@ -63,15 +67,42 @@ const SignIn = () => {
     });
   };
 
+  const handleInputDisplay = (event) => {
+    const value = event.target.value;
+
+    let error = "";
+
+    error = value ? "" : "This field is required.";
+
+    error = error === "" && value.match(displayNameRegex) ? "" : "Username not valid. Use alphanumeric values up to 15 characters."
+    
+    setDisplay({
+      value,
+      error
+    });
+  };
+
 
   const isFormValid = () => {
     let ret = true;
 
     ret &= email.value !== "" && email.error === "";
     ret &= password.value !== "" && password.error === "";
+    ret &= display.value !== "" && display.error === "";
 
     return ret;
   };
+
+  const onCloseAlertForm = () => {
+    setValues({
+      ...values,
+      error: {
+        severity: "warning",
+        title: ""
+      },
+      formAlertOpen: false,
+    });
+  }
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -98,21 +129,9 @@ const SignIn = () => {
     }
   };
 
-  const onCloseAlertForm = () => {
-    setValues({
-      ...values,
-      error: {
-        severity: "warning",
-        title: ""
-      },
-      formAlertOpen: false,
-    });
-  }
-
   return (
     <Container component="main" maxWidth="xs" className={classes.signincont}>
-      <CssBaseline />
-      {values.formAlertOpen && 
+    {values.formAlertOpen && 
         <Alert
           severity={values.error.severity}
           onClose={onCloseAlertForm}
@@ -120,47 +139,65 @@ const SignIn = () => {
           {values.error.title}
         </Alert>
       }
+      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <StorefrontOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign up
         </Typography>
         <form className={classes.form}
           noValidate
           onSubmit={handleFormSubmit}
         >
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email.value}
-            onChange={handleInputEmail}
-            onBlur={handleInputEmail}
-            {...(email.error !== "" && { error: true, helperText: email.error })}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password.value}
-            onChange={handleInputPassword}
-            onBlur={handleInputPassword}
-            {...(password.error !== "" && { error: true, helperText: password.error })}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="dName"
+                name="displayName"
+                variant="outlined"
+                required
+                fullWidth
+                id="displayName"
+                label="Username"
+                autoFocus
+                onChange={handleInputDisplay}
+                onBlur={handleInputDisplay}
+                {...(display.error !== "" && { error: true, helperText: display.error })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                onChange={handleInputEmail}
+                onBlur={handleInputEmail}
+                {...(email.error !== "" && { error: true, helperText: email.error })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password.value}
+                onChange={handleInputPassword}
+                onBlur={handleInputPassword}
+                {...(password.error !== "" && { error: true, helperText: password.error })}
+              />
+            </Grid>
+          </Grid>
           <Button
             type="submit"
             fullWidth
@@ -168,7 +205,7 @@ const SignIn = () => {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Sign Up
           </Button>
         </form>
       </div>
@@ -176,4 +213,4 @@ const SignIn = () => {
   );
 }
 
-export default SignIn;
+export default SignUp;

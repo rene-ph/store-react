@@ -1,8 +1,8 @@
 
-import CategoryItem from '../components/CategoryItem/CategoryItem';
+import CategoryItem from '../../components/CategoryItem/CategoryItem';
 import Grid from '@material-ui/core/Grid';
-import Navbar from '../components/Navbar/Navbar';
-import { getListOfCategory } from '../utils/data';
+import Navbar from '../../components/Navbar/Navbar';
+import { getListOfCategory } from '../../utils/data';
 import { makeStyles } from '@material-ui/core/styles';
 
 
