@@ -11,20 +11,9 @@ const useStyles = makeStyles((theme) => ({
      '& .MuiGrid-container': {
          alignItems: 'center'
     },
-  },
-  catalogMenu: {
-      width: '100%',
-      '& svg': {
-          width: '50px',
-          justifyContent: 'center',
-      },
-      '& .MuiGrid-item': {
-        padding: theme.spacing(3),
-        borderRight: '1px solid grey',
-      },
-      '& .MuiGrid-item:last-child': {
-        borderRight: 'none',
-      }
+    '& svg': {
+      cursor: 'pointer'
+    }
   },
   navBar: {
     paddingLeft: theme.spacing(25),
@@ -32,29 +21,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
     color: 'black',
   },
-  cardCatalog: {
-      width: '100%',
-      borderTop: '1px solid grey',
-      paddingLeft: theme.spacing(25),
-      paddingRight: theme.spacing(25),
-      textAlign: 'center',
-
-      '& .MuiCardContent-root': {
-          padding: 0
-      }
-  },
   iconLogIn: {
     paddingRight: theme.spacing(2),
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {
-    flexGrow: 1,
-  },
-  menuOptions: {
-    flexGrow: 13
-  }
 }));
 
 const Navbar = () => {

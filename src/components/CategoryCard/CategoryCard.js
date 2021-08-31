@@ -8,10 +8,16 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3),
         backgroundColor: 'white',
         backgroundRepeat: 'no-repeat',
-        textAlign: 'center',
-        '& img': {
-            height: '300px'
+
+        '& a': {
+            display: 'block'
         }
+    },
+    image: {
+        height: '360px',
+        width: '360px',
+        cursor: 'pointer',
+        marginBottom: '1rem'
     }
 }));
 
@@ -24,8 +30,7 @@ const CategoryCard = (props) => {
             <Card className={classes.root} >
                 <CardContent>
                     <h2>{props.title}</h2>
-                    <img src={props.image} alt="category"></img>
-                    <br/>
+                    <img src={props.image} alt="category" className={classes.image} ></img>
                     <Link href="#" onClick={preventDefault}>Shop now</Link>
                 </CardContent>
             </Card>

@@ -13,10 +13,10 @@ const Home = () => {
             <Navbar></Navbar>
             <br/>
             <Carousel></Carousel>
-            <br/>
-            <Grid container style={{flexGrow: 1}}>
+            <br/><br/><br/>
+            <Grid container>
                 { categories.map((category, index) => {
-                    return (  <Grid item xs={4} lg={4}> 
+                    return (  <Grid item xs={12} lg={3}> 
                                 <Categorycard key={index} title={category.title} image={category.url}/> 
                               </Grid>)
                 })}
