@@ -1,12 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Home from './pages/Home/Home';
+import CategoryList from './pages/CategoryList/CategoryList';
+import SignUp from './pages/SignUp/Signup';
+import SignIn from './pages/SignIn/Signin';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import store  from './store'
+import { Provider } from 'react-redux'
+import AppTheme from './theme/index';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+     <Provider store={store}>
+        <AppTheme>
+          <Router>
+            <Switch>
+                <Route exact path='/' name='LogIn' component={SignIn}/>  
+                <Route exact path='/register' name='SignUp' component={SignUp}/>    
+                <Route exact path='/home' name='Home' component={Home}/>     
+                <Route exact path='/directory/:id' name='CategoryList' component={CategoryList}/>
+            </Switch>
+          </Router>
+        </AppTheme>
+     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
