@@ -9,9 +9,10 @@ import useStyles from '../SignIn/Signin.style';
 import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
-
-const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/gm;
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/g;
+import {
+  emailRegex,
+  passwordRegex
+} from '../../utils/utils';
 
 const SignIn = () => {
   const classes = useStyles();

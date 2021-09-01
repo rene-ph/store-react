@@ -1,6 +1,7 @@
 import Navbar from '../../components/Navbar/Navbar';
 import Categorycard from '../../components/CategoryCard/CategoryCard';
 import Carousel from '../../components/Carousel/Carousel';
+import CartInfo from '../../components/CartInfo';
 import Grid from '@material-ui/core/Grid';
 import { data, toUniqueArray } from '../../utils/data';
 
@@ -23,6 +24,7 @@ const Home = () => {
                               </Grid>)
                 })}
             </Grid>
+            <CartInfo />
         </>
     )
 }

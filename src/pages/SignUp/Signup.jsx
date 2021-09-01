@@ -9,11 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import useStyles from '../SignUp/Signup.style';
 import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
-
-const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/gm;
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/g;
-const displayNameRegex = /^[a-zA-Z0-9]{3,15}$/g;
-
+import {
+  emailRegex,
+  passwordRegex,
+  displayNameRegex
+} from '../../utils/utils';
 
 const SignUp = () => {
   const classes = useStyles();
