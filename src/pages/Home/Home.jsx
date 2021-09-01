@@ -15,9 +15,8 @@ const Home = () => {
             <br/><br/><br/>
             <Grid container justifyContent='center'>
                 { categories.map((category, index) => {
-                    return (  <Grid item xs={12} lg={3}> 
+                    return (  <Grid item xs={12} lg={3}  key={index} > 
                                 <Categorycard 
-                                        key={index} 
                                         title={category.title} 
                                         id={category.id}
                                         image={category.url}/> 

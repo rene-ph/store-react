@@ -24,13 +24,13 @@ const CategoryItem = (props) => {
                       direction="row"
                       justifyContent="flex-start"
                       alignItems="center">
-                    <Grid item xs={12} lg={10} justifyContent="space-around">
+                    <Grid item xs={12} lg={10}>
                         <b className={classes.price}>${props.price}</b>
                     </Grid>
                     <Grid item xs={12} lg={2}>
                         <CardActionArea>
                             <ShoppingCartTwoToneIcon onClick={() => {
-                                dispatch(add({'one':1}))
+                                dispatch(add({'name': props.name, 'price': props.price}))
                             }}/>
                         </CardActionArea>
                     </Grid>
