@@ -50,7 +50,6 @@ const UserPaymentForm = () => {
                         maskChar={null}
                         value={fields.card_number.value}
                         onChange={handleInputValue}
-                    //className={this.props.classes.textField}
                     >
                         {() =>
                             <TextField
@@ -84,9 +83,6 @@ const UserPaymentForm = () => {
                     <InputMask
                         mask="99/99"
                         maskChar={null}
-                    // value={self.state.inputValue}
-                    // onChange={this.getTextFieldValue}
-                    // className={this.props.classes.textField}
                     >
                         {() =>
                             <TextField

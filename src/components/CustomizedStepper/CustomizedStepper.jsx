@@ -16,7 +16,7 @@ function getSteps() {
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return 'Aqui va el carrito con los datos =P';
+            return '';
         case 1:
             return <UserInfoForm />;
         case 2:
@@ -39,10 +39,6 @@ export default function CustomizedSteppers() {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    // const handleReset = () => {
-    //     setActiveStep(0);
-    // };
-
     return (
         <div className={classes.root}>
             
@@ -64,9 +60,6 @@ export default function CustomizedSteppers() {
                             <Typography variant="h3" gutterBottom>
                                 All steps completed - you&apos;re finished
                             </Typography>
-                            {/* <Button onClick={handleReset} className={classes.button}>
-                                Go to cart
-                            </Button> */}
                         </div>
                     ) : (
                         <div>
