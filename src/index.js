@@ -1,28 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Home from './pages/Home/Home';
 import CategoryList from './pages/CategoryList/CategoryList';
-import SignUp from './pages/SignUp/Signup';
-import SignIn from './pages/SignIn/Signin';
-import ShoppingCart from './pages/ShoppingCart/Shoppingcart';
-import reportWebVitals from './reportWebVitals';
+import Checkout from './pages/Checkout/Checkout';
+import Home from './pages/Home/Home';
+import SignUp from './pages/SignUp/SignUp';
+import SignIn from './pages/SignIn/SignIn';
+import ShoppingCart from './pages/ShoppingCart/ShoppingCart';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import store  from './redux/store'
-import { Provider } from 'react-redux'
 import AppTheme from './theme/index';
+import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux'
+import store  from './redux/store'
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
      <Provider store={store}>
         <AppTheme>
           <Router>
-            <Switch>
-                <Route path='/' name='Home' component={Home}/>     
+            <Switch>   
                 <Route path='/login' name='LogIn' component={SignIn}/>
                 <Route path='/register' name='SignUp' component={SignUp}/>   
-                <Route exact path='/directory/:id' name='CategoryList' component={CategoryList}/> 
-                <Route exact path='/viewcart' name='ShoppingCart' component={ShoppingCart}/>
+                <Route path='/directory/:id' name='CategoryList' component={CategoryList}/> 
+                <Route path='/viewcart' name='ShoppingCart' component={ShoppingCart}/>
+                <Route path='/checkout' name='Checkout' component={Checkout}/>
+                <Route path='/' name='Home' component={Home}/>  
             </Switch>
           </Router>
         </AppTheme>

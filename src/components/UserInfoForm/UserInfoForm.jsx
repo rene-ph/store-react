@@ -1,11 +1,19 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-// import { useStyles } from "./UserInfoForm.styles";
+import { updateUserInfo } from '../../redux/checkoutFormSlice';
 
 const UserInfoForm = () => {
-    // const classes = useStyles();
+
+    const dispatch = useDispatch();
+
+    const handleBlur = (ev) => {
+        if (ev.target.value != null) {
+            dispatch(updateUserInfo({ [ev.target.name]: ev.target.value }));
+        }
+    }   
 
     return (
         <div>
@@ -20,6 +28,7 @@ const UserInfoForm = () => {
                 id="id_email"
                 label="Email Address"
                 name="email"
+                onBlur={handleBlur}
                 autoFocus
             />
 

@@ -1,11 +1,10 @@
-import Navbar from '../../components/Navbar/Navbar';
+import { useEffect, useState } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Categorycard from '../../components/CategoryCard/CategoryCard';
 import Carousel from '../../components/Carousel/Carousel';
-import CartInfo from '../../components/CartInfo';
-import Grid from '@material-ui/core/Grid';
-import { toUniqueArray } from '../../utils/data';
-import { useEffect, useState } from 'react';
-import { fetchCollections } from '../../api/store';
+import Navbar from '../../components/Navbar/Navbar';
+import { fetchCollections } from '../../api/store.service';
+import { toUniqueArray } from '../../utils/utils';
 
 const Home = () => {
 
@@ -36,7 +35,6 @@ const Home = () => {
                               </Grid>)
                 })): null }
             </Grid>
-            <CartInfo />
         </>
     )
 }

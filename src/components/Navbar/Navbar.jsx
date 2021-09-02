@@ -1,17 +1,17 @@
-import useStyles from './Navbar.styles';
+import { useHistory } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { useHistory } from "react-router-dom";
+import Toolbar from '@material-ui/core/Toolbar';
+import useStyles from './Navbar.styles';
 
 const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleBackHome = () => {
-    history.push('/home');
+    history.push('/');
   }
 
   const handleCart = () =>{

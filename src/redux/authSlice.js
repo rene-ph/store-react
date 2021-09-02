@@ -13,7 +13,4 @@ export const authSlice = createSlice({
   reducers: {},
 });
 
-// Action creators are generated for each case reducer function
-//export const { add, remove } = cartSlice.actions;
-
 export default authSlice.reducer
