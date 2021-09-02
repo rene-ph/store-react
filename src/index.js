@@ -17,10 +17,10 @@ ReactDOM.render(
         <AppTheme>
           <Router>
             <Switch>
-                <Route exact path='/' name='LogIn' component={SignIn}/>  
-                <Route exact path='/register' name='SignUp' component={SignUp}/>    
-                <Route exact path='/home' name='Home' component={Home}/>     
                 <Route exact path='/directory/:id' name='CategoryList' component={CategoryList}/>
+                <Route path='/register' name='SignUp' component={SignUp}/>    
+                <Route path='/login' name='LogIn' component={SignIn}/>
+                <Route path='/' name='Home' component={Home}/>     
             </Switch>
           </Router>
         </AppTheme>
