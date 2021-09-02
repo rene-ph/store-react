@@ -5,9 +5,10 @@ import Home from './pages/Home/Home';
 import CategoryList from './pages/CategoryList/CategoryList';
 import SignUp from './pages/SignUp/Signup';
 import SignIn from './pages/SignIn/Signin';
+import ShoppingCart from './pages/ShoppingCart/Shoppingcart';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import store  from './store'
+import store  from './redux/store'
 import { Provider } from 'react-redux'
 import AppTheme from './theme/index';
 
@@ -17,10 +18,11 @@ ReactDOM.render(
         <AppTheme>
           <Router>
             <Switch>
-                <Route exact path='/directory/:id' name='CategoryList' component={CategoryList}/>
-                <Route path='/register' name='SignUp' component={SignUp}/>    
-                <Route path='/login' name='LogIn' component={SignIn}/>
                 <Route path='/' name='Home' component={Home}/>     
+                <Route path='/login' name='LogIn' component={SignIn}/>
+                <Route path='/register' name='SignUp' component={SignUp}/>   
+                <Route exact path='/directory/:id' name='CategoryList' component={CategoryList}/> 
+                <Route exact path='/viewcart' name='ShoppingCart' component={ShoppingCart}/>
             </Switch>
           </Router>
         </AppTheme>

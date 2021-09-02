@@ -14,6 +14,10 @@ const Navbar = () => {
     history.push('/home');
   }
 
+  const handleCart = () =>{
+      history.push('/viewcart');
+  }
+
   return (
         <>
             <div className={classes.root}>
@@ -25,7 +29,7 @@ const Navbar = () => {
                             </Grid>
                         </Grid>
                         <AccountBoxIcon/>
-                        <ShoppingCartIcon/>
+                        <ShoppingCartIcon onClick={handleCart}/>
                     </Toolbar>
                 </AppBar>
             </div>
