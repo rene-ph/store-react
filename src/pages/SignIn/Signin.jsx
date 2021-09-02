@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
+import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
+import Container from '@material-ui/core/Container';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import Typography from '@material-ui/core/Typography';
-import useStyles from '../SignIn/Signin.style';
-import Container from '@material-ui/core/Container';
-import Alert from '@material-ui/lab/Alert';
-import { useHistory } from "react-router-dom";
+import TextField from '@material-ui/core/TextField';
 import {
   emailRegex,
   passwordRegex
 } from '../../utils/utils';
+import useStyles from './SignIn.style';
 
 const SignIn = () => {
   const classes = useStyles();
@@ -37,13 +37,9 @@ const SignIn = () => {
 
   const handleInputPassword = (event) => {
     const value = event.target.value;
-
     let error = "";
-
     error = value ? "" : "This field is required.";
-
     error = error === "" && value.match(passwordRegex) ? "" : "Please use more than 4 character password requiring numbers and both lowercase and uppercase letters."
-
     setPassword({
       value,
       error
@@ -52,13 +48,9 @@ const SignIn = () => {
 
   const handleInputEmail = (event) => {
     const value = event.target.value;
-
     let error = "";
-
     error = value ? "" : "This field is required.";
-
     error = error === "" && value.match(emailRegex) ? "" : "Email address is not valid."
-    
     setEmail({
       value,
       error
@@ -68,10 +60,8 @@ const SignIn = () => {
 
   const isFormValid = () => {
     let ret = true;
-
     ret &= email.value !== "" && email.error === "";
     ret &= password.value !== "" && password.error === "";
-
     return ret;
   };
 
@@ -113,7 +103,7 @@ const SignIn = () => {
 
   const history = useHistory();
   const handleSubmit = () => {
-    history.push('/home');
+    history.push('/');
   }
 
   return (

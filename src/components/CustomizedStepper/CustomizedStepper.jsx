@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useStyles } from "./CustomizeStepper.styles";
-import { QontoConnector, QontoStepIcon } from "./CustomizeStepper.styles";
 import UserInfoForm from '../UserInfoForm/UserInfoForm';
 import UserPaymentForm from '../UserPaymentForm';
+import { QontoConnector, QontoStepIcon } from "./CustomizeStepper.styles";
+import { useStyles } from "./CustomizeStepper.styles";
 
 function getSteps() {
     return ['Cart', 'Information', 'Payment'];
@@ -26,12 +26,15 @@ function getStepContent(step) {
     }
 }
 
-export default function CustomizedSteppers() {
+export default function CustomizedStepper(props) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(1);
     const steps = getSteps();
 
     const handleNext = () => {
+        if (activeStep === 2) {
+            props.checkout();
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 

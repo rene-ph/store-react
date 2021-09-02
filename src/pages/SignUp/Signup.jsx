@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Alert from '@material-ui/lab/Alert';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import useStyles from '../SignUp/Signup.style';
 import Container from '@material-ui/core/Container';
-import Alert from '@material-ui/lab/Alert';
+
+import useStyles from './SignUp.style';
+
 import {
   emailRegex,
   passwordRegex,

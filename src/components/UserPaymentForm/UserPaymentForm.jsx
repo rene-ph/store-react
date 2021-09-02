@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import InputMask from 'react-input-mask';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import InputMask from 'react-input-mask';
 import { useStyles } from "./UserPaymentForm.styles";
 import { creditcarRegex } from '../../utils/utils';
 

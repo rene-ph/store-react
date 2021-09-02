@@ -1,9 +1,9 @@
 
-import CategoryItem from '../../components/CategoryItem/CategoryItem';
 import Grid from '@material-ui/core/Grid';
+import CategoryItem from '../../components/CategoryItem/CategoryItem';
 import Navbar from '../../components/Navbar/Navbar';
-import { getListOfCategory } from '../../utils/data';
 import useStyles from './CategoryList.style';
+import { getListOfCategory } from '../../utils/utils';
 
 const CategoryList = ({match}) => {
 
