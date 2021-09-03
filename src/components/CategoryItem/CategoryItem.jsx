@@ -10,7 +10,15 @@ import { add } from '../../redux/cartSlice';
 
 const CategoryItem = (props) => {
     const classes = useStyles();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    const handleClickCart = () => {
+        dispatch(add({'name': props.name, 
+                      'price': props.price, 
+                      'imageUrl': props.imageUrl, 
+                      'id': props.id,
+                      'quantity': 1 }));
+    }
 
     return (
         <Card className={classes.root}>
@@ -29,9 +37,7 @@ const CategoryItem = (props) => {
                     </Grid>
                     <Grid item xs={12} lg={2}>
                         <CardActionArea>
-                            <ShoppingCartTwoToneIcon onClick={() => {
-                                dispatch(add({'name': props.name, 'price': props.price}))
-                            }}/>
+                            <ShoppingCartTwoToneIcon onClick={handleClickCart}/>
                         </CardActionArea>
                     </Grid>
                 </Grid>

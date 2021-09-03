@@ -1,14 +1,22 @@
 import { useHistory } from "react-router-dom";
-import AppBar from '@material-ui/core/AppBar';
+import { useSelector } from 'react-redux';
+import {
+    AppBar,
+    Badge,
+    Grid,
+    Toolbar
+} from '@material-ui/core'
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import Grid from '@material-ui/core/Grid';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import Toolbar from '@material-ui/core/Toolbar';
 import useStyles from './Navbar.styles';
+import { getCartQuantity } from '../../redux/selector/cart.selector';
 
 const Navbar = () => {
   const classes = useStyles();
   const history = useHistory();
+ 
+  const quantity = useSelector(getCartQuantity);
+  
 
   const handleBackHome = () => {
     history.push('/');
@@ -24,12 +32,18 @@ const Navbar = () => {
                 <AppBar position="static" className={classes.navBar}>
                     <Toolbar>
                         <Grid container>
-                            <Grid container item xs={8} lg={2}>
+                            <Grid item xs={8} lg={11}>
                                 <h2 onClick={handleBackHome}>ReactEShop</h2>
                             </Grid>
+                            <Grid item xs={4} lg={1}>
+                                <AccountBoxIcon/> 
+                                    <Badge badgeContent={quantity} 
+                                           color="primary" 
+                                           className={classes.badge}>
+                                        <ShoppingCartIcon onClick={handleCart}/>
+                                    </Badge>
+                            </Grid>
                         </Grid>
-                        <AccountBoxIcon/>
-                        <ShoppingCartIcon onClick={handleCart}/>
                     </Toolbar>
                 </AppBar>
             </div>
