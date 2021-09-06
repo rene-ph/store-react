@@ -29,7 +29,6 @@ const Cart = (props) => {
                 prop: 'quantity',
                 value: parseInt(ev.target.value, 10)
             }));
-            console.log(item.price);
             dispatch(updateCartById({
                 id: props.id,
                 prop: 'price',
@@ -60,6 +59,7 @@ const Cart = (props) => {
                                    variant="outlined"
                                    type="number" 
                                    align="center"
+                                   disabled={props.readOnly}
                                    onChange={handleChangeQty}
                                    value={props.quantity} >
                         </TextField>
@@ -67,9 +67,12 @@ const Cart = (props) => {
                     <Grid item xs={12} lg={2} align="center">
                         <p>${props.price}</p>
                     </Grid>
-                    <Grid item xs={12} lg={2} align="center">
-                        <DeleteIcon onClick={handleDeleteCart}/>
-                    </Grid>
+                    { !props.readOnly ? (
+                        <Grid item xs={12} lg={2} align="center">
+                            <DeleteIcon onClick={handleDeleteCart}/>
+                        </Grid>
+                    ) : null}
+      
                 </Grid>
             <Divider/>
         </>
