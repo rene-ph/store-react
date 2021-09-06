@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
-import useStyles from './SignUp.style';
+import useStyles from './Signup.style';
 
 import {
   emailRegex,
