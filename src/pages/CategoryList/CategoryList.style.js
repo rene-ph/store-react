@@ -8,6 +8,16 @@ const useStyles = makeStyles((theme) => ({
     categoryCard: {
         margin: theme.spacing(2)
     },
+    title: {
+        margin: theme.spacing(2),
+        paddingLeft: theme.spacing(6)
+    },
+    showMore: {
+        cursor: 'pointer',
+        "& h2": {
+            marginBottom: 0
+        }
+    }
 }));
 
 export default useStyles;
