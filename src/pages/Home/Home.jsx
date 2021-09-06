@@ -1,20 +1,25 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import { useSelector } from 'react-redux';
 import Categorycard from '../../components/CategoryCard/CategoryCard';
 import Carousel from '../../components/Carousel/Carousel';
 import Navbar from '../../components/Navbar/Navbar';
 import { fetchCollections } from '../../api/store.service';
-import { toUniqueArray } from '../../utils/utils';
+import { add } from '../../redux/categoriesSlice';
+import { getCategories } from '../../redux/selector/categories.selector';
 
 const Home = () => {
 
-    const [categories, setCategories] = useState(null);
+    const dispatch = useDispatch();
+
+    const categories = useSelector(getCategories);
 
     useEffect(() => {
         (async () => {
             const result = await fetchCollections();
             if (result.success) {
-                setCategories(toUniqueArray(result.data));
+                dispatch(add(result.data));
             }
         })();
     },[]);
@@ -30,7 +35,8 @@ const Home = () => {
                     return (  <Grid item xs={12} lg={3}  key={index} > 
                                 <Categorycard 
                                         title={category.title} 
-                                        id={category.id}
+                                        id={category.col_id}
+
                                         image={category.url}/> 
                               </Grid>)
                 })): null }

@@ -3,11 +3,13 @@ import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import SummaryCart from '../SummaryCart/SummaryCart';
 import Typography from '@material-ui/core/Typography';
 import UserInfoForm from '../UserInfoForm/UserInfoForm';
 import UserPaymentForm from '../UserPaymentForm';
 import { QontoConnector, QontoStepIcon } from "./CustomizeStepper.styles";
 import { useStyles } from "./CustomizeStepper.styles";
+
 
 function getSteps() {
     return ['Cart', 'Information', 'Payment'];
@@ -16,7 +18,7 @@ function getSteps() {
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return '';
+            return <SummaryCart/>;
         case 1:
             return <UserInfoForm />;
         case 2:
@@ -28,7 +30,7 @@ function getStepContent(step) {
 
 export default function CustomizedStepper(props) {
     const classes = useStyles();
-    const [activeStep, setActiveStep] = useState(1);
+    const [activeStep, setActiveStep] = useState(0);
     const steps = getSteps();
 
     const handleNext = () => {

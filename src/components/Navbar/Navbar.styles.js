@@ -12,11 +12,18 @@ const useStyles = makeStyles((theme) => ({
         }
       },
       navBar: {
-        paddingLeft: theme.spacing(25),
-        paddingRight: theme.spacing(25),
+        paddingLeft: theme.spacing(5),
+        paddingRight: theme.spacing(5),
         backgroundColor: 'white',
         color: 'black',
-      }
+      },
+      badge: {
+        top: -8,
+        '& .MuiBadge-badge': {
+          top: 18,
+          right: 15
+        }
+      },
 }));
 
 export default useStyles;
