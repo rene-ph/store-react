@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Avatar from '@material-ui/core/Avatar';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
@@ -8,14 +9,16 @@ import Container from '@material-ui/core/Container';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import {
-  emailRegex,
-  passwordRegex
-} from '../../utils/utils';
-import useStyles from './SignIn.style';
+import { emailRegex, passwordRegex } from '../../utils/utils';
+import useStyles from './Signin.style';
+import AuthService from '../../services/AuthService';
+import { setToken } from "../../redux/authSlice";
+import { setLogin } from "../../utils/utils";
 
 const SignIn = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const initialFormValues = {
     email: "",
@@ -32,8 +35,8 @@ const SignIn = () => {
   }
 
   const [values, setValues] = useState(initialFormValues);
-  const [email, setEmail] = useState(Object.assign({}, field));
-  const [password, setPassword] = useState(Object.assign({}, field));
+  const [email, setEmail] = useState(field);
+  const [password, setPassword] = useState(field);
 
   const handleInputPassword = (event) => {
     const value = event.target.value;
@@ -65,25 +68,47 @@ const SignIn = () => {
     return ret;
   };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
+    var severity = "success", title = "Redirecting...", showAlert = false;
+
 
     if (isFormValid()) {
-      setValues({
-        ...values,
-        error: {
-          severity: "success",
-          title: "Trying to post... cooming soon!"
-        },
-        formAlertOpen: true,
-      });
+      try {
+        let data = await AuthService.login({
+          email: email.value,
+          password: password.value
+        });
+
+        dispatch(setToken(data.data.token));
+
+        setLogin(data.data.token);
+
+        history.push('/');
+      } catch (error) {
+        if (error.response && error.response.status === 400
+          && !error.response.data.success
+          && error.response.data.message === "invalid credentials!") {
+          severity = "warning";
+          title = "The credentials used are not valid!";
+        } else {
+          severity = "error";
+          title = "An error ocurred while logging in, please try again!";
+        }
+        showAlert = true;
+      }
     } else {
-      
+      severity = "warning";
+      title = "Check the data entered it might be not valid!";
+      showAlert = true;
+    }
+
+    if (showAlert) {
       setValues({
         ...values,
         error: {
-          severity: "warning",
-          title: "Check the data entered it might be not valid!"
+          severity,
+          title,
         },
         formAlertOpen: true,
       });
@@ -101,15 +126,16 @@ const SignIn = () => {
     });
   }
 
-  const history = useHistory();
-  const handleSubmit = () => {
+
+
+  const handleBackHome = () => {
     history.push('/');
   }
 
   return (
     <Container component="main" maxWidth="xs" className={classes.signincont}>
       <CssBaseline />
-      {values.formAlertOpen && 
+      {values.formAlertOpen &&
         <Alert
           severity={values.error.severity}
           onClose={onCloseAlertForm}
@@ -164,9 +190,18 @@ const SignIn = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={handleFormSubmit}
           >
             Sign In
+          </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            className={classes.submit}
+            onClick={handleBackHome}
+          >
+            Go back home
           </Button>
         </form>
       </div>
