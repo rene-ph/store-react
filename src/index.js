@@ -5,7 +5,7 @@ import Checkout from './pages/Checkout/Checkout';
 import Home from './pages/Home/Home';
 import SignUp from './pages/SignUp/SignUp';
 import SignIn from './pages/SignIn/SignIn';
-import ShoppingCart from './pages/ShoppingCart/ShoppingCart';
+import ShoppingCart from './pages/ShoppingCart/Shoppingcart';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import AppTheme from './theme/index';
 import reportWebVitals from './reportWebVitals';
