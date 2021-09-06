@@ -32,3 +32,10 @@ export const getByListOfCategoryById = (id) => createSelector(
         return cat.filter(item => item.col_id === id);
     }
 )
+
+export const getListOfCategories = () => createSelector(
+    getCategories,
+    (cat) => {
+         return cat.map( (item) => item.title);
+    }
+)
