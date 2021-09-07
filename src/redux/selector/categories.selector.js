@@ -2,6 +2,8 @@ import { createSelector } from "@reduxjs/toolkit";
 
 export const category = (state) => state.storeCategories.categories;
 
+export const loading = (state) => state.storeCategories.isLoading;
+
 export const getCategories = createSelector(
     category, 
     (categories) => {
