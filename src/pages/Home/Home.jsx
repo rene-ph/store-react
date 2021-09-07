@@ -37,15 +37,15 @@ const Home = () => {
             <Navbar mb={2}></Navbar>
             <Carousel mb={6}/>
             <Grid container justifyContent='center'>
-                { categories ?  (categories.map((category, index) => {
-                    return (  <Grid item xs={12} lg={3}  key={index} > 
-                                <Categorycard 
-                                        title={category.title} 
-                                        id={category.col_id}
+                {categories ? (categories.map((category, index) => {
+                    return (<Grid item xs={12} lg={3} key={index} >
+                        <Categorycard
+                            title={category.title}
+                            id={category.col_id}
 
-                                        image={category.url}/> 
-                              </Grid>)
-                })): null }
+                            image={category.url} />
+                    </Grid>)
+                })) : null}
             </Grid>
         </>
     )

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Avatar from '@material-ui/core/Avatar';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
@@ -8,82 +9,91 @@ import Container from '@material-ui/core/Container';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import useStyles from './Signin.style';
+import AuthService from '../../services/AuthService';
+import { setToken, setUser } from "../../redux/authSlice";
 import {
-  emailRegex,
-  passwordRegex
+  emailValidator,
+  passwordValidator,
+  validForm,
+  setLocalUser,
+  setLocalToken
 } from '../../utils/utils';
-import useStyles from './SignIn.style';
+
+const formInfo = {
+  email: {
+    id: "id_email",
+    value: "",
+    error: null,
+    validator: emailValidator
+  },
+  password: {
+    id: "id_password",
+    value: "",
+    error: null,
+    validator: passwordValidator
+  }
+};
+
+const alertInit = {
+  formAlertOpen: false,
+  error: {}
+}
 
 const SignIn = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [values, setValues] = useState(formInfo);
+  const [alertInfo, setAlertInfo] = useState(alertInit);
 
-  const initialFormValues = {
-    email: "",
-    password: "",
-    formSubmitted: false,
-    success: false,
-    error: "",
-    formAlertOpen: false,
-  };
-
-  const field = {
-    value: "",
-    error: ""
-  }
-
-  const [values, setValues] = useState(initialFormValues);
-  const [email, setEmail] = useState(Object.assign({}, field));
-  const [password, setPassword] = useState(Object.assign({}, field));
-
-  const handleInputPassword = (event) => {
-    const value = event.target.value;
-    let error = "";
-    error = value ? "" : "This field is required.";
-    error = error === "" && value.match(passwordRegex) ? "" : "Please use more than 4 character password requiring numbers and both lowercase and uppercase letters."
-    setPassword({
-      value,
-      error
-    });
-  };
-
-  const handleInputEmail = (event) => {
-    const value = event.target.value;
-    let error = "";
-    error = value ? "" : "This field is required.";
-    error = error === "" && value.match(emailRegex) ? "" : "Email address is not valid."
-    setEmail({
-      value,
-      error
-    });
-  };
-
-
-  const isFormValid = () => {
-    let ret = true;
-    ret &= email.value !== "" && email.error === "";
-    ret &= password.value !== "" && password.error === "";
-    return ret;
-  };
-
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
+    var severity = "success", title = "Redirecting...", showAlert = false;
 
-    if (isFormValid()) {
-      setValues({
-        ...values,
-        error: {
-          severity: "success",
-          title: "Trying to post... cooming soon!"
-        },
-        formAlertOpen: true,
-      });
+    if (validForm(values)) {
+      try {
+        let token_data = await AuthService.login({
+          email: values.email.value,
+          password: values.password.value
+        });
+
+        let user_data = await AuthService.get_user({
+          headers: {'x-auth-token': token_data.data.token },
+        });
+        
+        if(token_data.data.token && user_data.data){
+          dispatch(setToken(token_data.data.token));
+          dispatch(setUser(user_data.data));
+          setLocalToken(token_data.data.token);
+          setLocalUser(user_data.data);
+        }
+
+        history.push('/');
+      } catch (error) {
+        if (error.response && error.response.status === 400
+          && !error.response.data.success
+          && error.response.data.message === "invalid credentials!") {
+          severity = "warning";
+          title = "The credentials used are not valid!";
+        } else {
+          severity = "error";
+          title = "An error ocurred while logging in, please try again!";
+        }
+        showAlert = true;
+      }
     } else {
-      
+      severity = "warning";
+      title = "Check the data entered it might be not valid!";
+      showAlert = true;
+    }
+
+    if (showAlert) {
       setValues({
         ...values,
         error: {
-          severity: "warning",
-          title: "Check the data entered it might be not valid!"
+          severity,
+          title,
         },
         formAlertOpen: true,
       });
@@ -91,7 +101,7 @@ const SignIn = () => {
   };
 
   const onCloseAlertForm = () => {
-    setValues({
+    setAlertInfo({
       ...values,
       error: {
         severity: "warning",
@@ -101,20 +111,33 @@ const SignIn = () => {
     });
   }
 
-  const history = useHistory();
-  const handleSubmit = () => {
+  const handleInputValue = (event) => {
+    const { name, value } = event.target;
+    let { msg: error } = values[name].validator(value);
+
+    setValues({
+      ...values,
+      [name]: {
+        ...values[name],
+        error,
+        value
+      }
+    });
+  };
+
+  const handleBackHome = () => {
     history.push('/');
   }
 
   return (
     <Container component="main" maxWidth="xs" className={classes.signincont}>
       <CssBaseline />
-      {values.formAlertOpen && 
+      {alertInfo.formAlertOpen &&
         <Alert
-          severity={values.error.severity}
+          severity={alertInfo.error.severity}
           onClose={onCloseAlertForm}
         >
-          {values.error.title}
+          {alertInfo.error.title}
         </Alert>
       }
       <div className={classes.paper}>
@@ -138,10 +161,10 @@ const SignIn = () => {
             name="email"
             autoComplete="email"
             autoFocus
-            value={email.value}
-            onChange={handleInputEmail}
-            onBlur={handleInputEmail}
-            {...(email.error !== "" && { error: true, helperText: email.error })}
+            value={values.email.value}
+            onChange={handleInputValue}
+            onBlur={handleInputValue}
+            {...(values.email.error && { error: true, helperText: values.email.error })}
           />
           <TextField
             variant="outlined"
@@ -153,10 +176,10 @@ const SignIn = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={password.value}
-            onChange={handleInputPassword}
-            onBlur={handleInputPassword}
-            {...(password.error !== "" && { error: true, helperText: password.error })}
+            value={values.password.value}
+            onChange={handleInputValue}
+            onBlur={handleInputValue}
+            {...(values.password.error && { error: true, helperText: values.password.error })}
           />
           <Button
             type="submit"
@@ -164,9 +187,18 @@ const SignIn = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={handleFormSubmit}
           >
             Sign In
+          </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            className={classes.submit}
+            onClick={handleBackHome}
+          >
+            Go back home
           </Button>
         </form>
       </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import Alert from '@material-ui/lab/Alert';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -8,93 +9,54 @@ import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import useStyles from './SignUp.style';
+import useStyles from './Signup.style';
+import { setToken, setUser } from "../../redux/authSlice";
+import AuthService from '../../services/AuthService';
+import { useDispatch } from "react-redux";
+import { setLocalToken, setLocalUser } from "../../utils/utils";
+
 import {
-  emailRegex,
-  passwordRegex,
-  displayNameRegex
+  usernameValidator,
+  emailValidator,
+  passwordValidator,
+  validForm
 } from '../../utils/utils';
+
+const formInfo = {
+  display_name: {
+    id: "id_display_name",
+    value: "",
+    error: null,
+    validator: usernameValidator
+  },
+  email: {
+    id: "id_email",
+    value: "",
+    error: null,
+    validator: emailValidator
+  },
+  password: {
+    id: "id_password",
+    value: "",
+    error: null,
+    validator: passwordValidator
+  }
+};
+
+const alertInit = {
+  formAlertOpen: false,
+  error: {}
+}
 
 const SignUp = () => {
   const classes = useStyles();
-
-  const initialFormValues = {
-    email: "",
-    password: "",
-    formSubmitted: false,
-    success: false,
-    error: "",
-    formAlertOpen: false,
-  };
-
-  const field = {
-    value: "",
-    error: ""
-  }
-
-  const [values, setValues] = useState(initialFormValues);
-  const [email, setEmail] = useState(Object.assign({}, field));
-  const [password, setPassword] = useState(Object.assign({}, field));
-  const [display, setDisplay] = useState(Object.assign({}, field));
-
-  const handleInputPassword = (event) => {
-    const value = event.target.value;
-
-    let error = "";
-
-    error = value ? "" : "This field is required.";
-
-    error = error === "" && value.match(passwordRegex) ? "" : "Please use more than 4 character password requiring numbers and both lowercase and uppercase letters."
-
-    setPassword({
-      value,
-      error
-    });
-  };
-
-  const handleInputEmail = (event) => {
-    const value = event.target.value;
-
-    let error = "";
-
-    error = value ? "" : "This field is required.";
-
-    error = error === "" && value.match(emailRegex) ? "" : "Email address is not valid."
-    
-    setEmail({
-      value,
-      error
-    });
-  };
-
-  const handleInputDisplay = (event) => {
-    const value = event.target.value;
-
-    let error = "";
-
-    error = value ? "" : "This field is required.";
-
-    error = error === "" && value.match(displayNameRegex) ? "" : "Username not valid. Use alphanumeric values up to 15 characters."
-    
-    setDisplay({
-      value,
-      error
-    });
-  };
-
-
-  const isFormValid = () => {
-    let ret = true;
-
-    ret &= email.value !== "" && email.error === "";
-    ret &= password.value !== "" && password.error === "";
-    ret &= display.value !== "" && display.error === "";
-
-    return ret;
-  };
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [values, setValues] = useState(formInfo);
+  const [alertInfo, setAlertInfo] = useState(alertInit);
 
   const onCloseAlertForm = () => {
-    setValues({
+    setAlertInfo({
       ...values,
       error: {
         severity: "warning",
@@ -104,39 +66,93 @@ const SignUp = () => {
     });
   }
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
+    var severity = "success", title = "Redirecting...", showAlert = false;
 
-    if (isFormValid()) {
-      setValues({
-        ...values,
-        error: {
-          severity: "success",
-          title: "Trying to post... cooming soon!"
-        },
-        formAlertOpen: true,
-      });
+
+    if (validForm(values)) {
+      try {
+        let token_data = await AuthService.signup({
+          email: values.email.value,
+          displayName: values.display_name.value,
+          password: values.password.value,
+        });
+
+        let user_data = await AuthService.get_user({
+          headers: {'x-auth-token': token_data.data.token },
+        });
+        
+        if(token_data.data.token && user_data.data){
+          dispatch(setToken(token_data.data.token));
+          dispatch(setUser(user_data.data));
+          setLocalToken(token_data.data.token);
+          setLocalUser(user_data.data);
+        }
+
+        history.push('/');
+      } catch (error) {
+        if (error.response && error.response.status === 400
+          && !error.response.data.success
+          && error.response.data.message === "email already registered!") {
+          severity = "warning";
+          title = "This email has been registered already, please try again!";
+        } else {
+          severity = "error";
+          title = "An error ocurred while logging in, please try again!";
+        }
+        showAlert = true;
+      }
     } else {
-      
-      setValues({
+      severity = "warning";
+      title = "Check the data entered it might be not valid!";
+      showAlert = true;
+    }
+
+    if (showAlert) {
+      setAlertInfo({
         ...values,
         error: {
-          severity: "warning",
-          title: "Check the data entered it might be not valid!"
+          severity,
+          title,
         },
         formAlertOpen: true,
       });
     }
   };
 
+  const handleInputValue = (event) => {
+    const { name, value } = event.target;
+    let { msg: error } = values[name].validator(value);
+
+    setValues({
+      ...values,
+      [name]: {
+        ...values[name],
+        error,
+        value
+      }
+    });
+  };
+
+
+  const handleBackHome = () => {
+    history.push('/');
+  }
+
+  const handleSignInLink = () => {
+    history.push('/login');
+  }
+
+
   return (
     <Container component="main" maxWidth="xs" className={classes.signincont}>
-    {values.formAlertOpen && 
+      {alertInfo.formAlertOpen &&
         <Alert
-          severity={values.error.severity}
+          severity={alertInfo.error.severity}
           onClose={onCloseAlertForm}
         >
-          {values.error.title}
+          {alertInfo.error.title}
         </Alert>
       }
       <CssBaseline />
@@ -155,16 +171,17 @@ const SignUp = () => {
             <Grid item xs={12}>
               <TextField
                 autoComplete="dName"
-                name="displayName"
+                name="display_name"
                 variant="outlined"
                 required
                 fullWidth
-                id="displayName"
+                id="id_display_name"
                 label="Username"
                 autoFocus
-                onChange={handleInputDisplay}
-                onBlur={handleInputDisplay}
-                {...(display.error !== "" && { error: true, helperText: display.error })}
+                value={values.display_name.value}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                {...(values.display_name.error && { error: true, helperText: values.display_name.error })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -172,13 +189,14 @@ const SignUp = () => {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
+                id="id_email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={handleInputEmail}
-                onBlur={handleInputEmail}
-                {...(email.error !== "" && { error: true, helperText: email.error })}
+                value={values.email.value}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                {...(values.email.error && { error: true, helperText: values.email.error })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -189,24 +207,48 @@ const SignUp = () => {
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
+                id="id_password"
                 autoComplete="current-password"
-                value={password.value}
-                onChange={handleInputPassword}
-                onBlur={handleInputPassword}
-                {...(password.error !== "" && { error: true, helperText: password.error })}
+                value={values.password.value}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                {...(values.password.error && { error: true, helperText: values.password.error })}
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                onClick={handleSignInLink}
+              >
+                Sign In
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                onClick={handleBackHome}
+              >
+                Go back home
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </div>
     </Container>
