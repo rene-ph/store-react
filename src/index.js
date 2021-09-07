@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import Spinner from './components/Spinner/Spinner';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ErrorBoundary } from 'react-error-boundary'
 import AppTheme from './theme/index';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
@@ -14,6 +15,7 @@ const Home = React.lazy(() => import('./pages/Home/Home'));
 const SignUp = React.lazy(() => import('./pages/SignUp/SignUp')); 
 const SignIn = React.lazy(() => import('./pages/SignIn/SignIn'));
 const ShoppingCart = React.lazy(() => import('./pages/ShoppingCart/ShoppingCart'));
+const ErrorFallback = React.lazy(() => import('./components/ErrorFallback/ErrorFallback'));
 
 ReactDOM.render(
 
@@ -24,32 +26,44 @@ ReactDOM.render(
             <Switch>   
                 <Route path='/login' name='LogIn'>
                   <Suspense fallback={<Spinner/>}>
-                    <SignIn/>  
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <SignIn/> 
+                    </ErrorBoundary> 
                   </Suspense>
                 </Route>
                 <Route path='/register' name='SignUp'> 
                   <Suspense fallback={<Spinner/>}>
-                    <SignUp/>  
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <SignUp/>  
+                    </ErrorBoundary>
                   </Suspense>
                 </Route>  
-                <Route path='/directory/:id' name='CategoryList'> 
+                <Route path='/directory/:id' name='CategoryList'>
                   <Suspense fallback={<Spinner/>}>
-                    <CategoryList/>  
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <CategoryList  /> 
+                    </ErrorBoundary> 
                   </Suspense>
                 </Route>
                 <Route path='/viewcart' name='ShoppingCart'>
                   <Suspense fallback={<Spinner/>}>
-                    <ShoppingCart/>  
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <ShoppingCart/> 
+                    </ErrorBoundary> 
                   </Suspense>
                 </Route>
                 <Route path='/checkout' name='Checkout'>
                   <Suspense fallback={<Spinner/>}>
-                    <Checkout/>  
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <Checkout/>  
+                    </ErrorBoundary>
                   </Suspense>
                 </Route>
                 <Route path='/' name='Home'>
                   <Suspense fallback={<Spinner/>}>
-                    <Home/>  
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <Home/>  
+                    </ErrorBoundary>
                   </Suspense>
                 </Route>
             </Switch>

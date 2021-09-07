@@ -6,13 +6,14 @@ import Carousel from '../../components/Carousel/Carousel';
 import Navbar from '../../components/Navbar/Navbar';
 import { fetchCollections } from '../../api/store.service';
 import { add } from '../../redux/categoriesSlice';
-import { setDisplayModal } from '../../redux/rootSlice';
 import { getCategories } from '../../redux/selector/categories.selector';
+import { useErrorHandler } from 'react-error-boundary'
 
 const Home = () => {
 
     const dispatch = useDispatch();
     const categories = useSelector(getCategories);
+    const handleError = useErrorHandler()
 
     const getCollections =  async () => {
         if (categories.length === 0) {
@@ -20,7 +21,7 @@ const Home = () => {
             if (result.success) {
                 dispatch(add(result.data));
             } else {
-                dispatch(setDisplayModal({ state: true, text: result.message, type: 'error' }))
+                handleError(result.message);
             } 
         }
     }
@@ -32,7 +33,7 @@ const Home = () => {
 
 
     return (
-            <>           
+        <>           
             <Navbar mb={2}></Navbar>
             <Carousel mb={6}/>
             <Grid container justifyContent='center'>
