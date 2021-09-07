@@ -10,6 +10,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import useStyles from './Navbar.styles';
 import { getCartQuantity } from '../../redux/selector/cart.selector';
+import Alert  from '../Alert/Alert';
 
 const Navbar = () => {
   const classes = useStyles();
@@ -29,6 +30,7 @@ const Navbar = () => {
   return (
         <>
             <div className={classes.root}>
+                <Alert />
                 <AppBar position="static" className={classes.navBar}>
                     <Toolbar>
                         <Grid container>
