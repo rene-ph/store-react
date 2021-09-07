@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    width: '100%',
     '& .auth': {
       '& .username':{
         paddingLeft: theme.spacing(1),
