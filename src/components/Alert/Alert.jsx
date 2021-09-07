@@ -5,12 +5,10 @@ import { setDisplayModal } from '../../redux/rootSlice';
 import { getModal } from '../../redux/selector/root.selector';
 import useStyles from './Alert.styles';
 
-
-const Alert = (props) => {
+const Alert = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const openModal = useSelector(getModal);
-
 
     return (
         <Snackbar open={openModal.state} 

@@ -1,11 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import CategoryList from './pages/CategoryList/CategoryList';
-import Checkout from './pages/Checkout/Checkout';
-import Home from './pages/Home/Home';
-import SignUp from './pages/SignUp/SignUp';
-import SignIn from './pages/SignIn/SignIn';
-import ShoppingCart from './pages/ShoppingCart/Shoppingcart';
+import Spinner from './components/Spinner/Spinner';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import AppTheme from './theme/index';
 import reportWebVitals from './reportWebVitals';
@@ -13,18 +8,50 @@ import { Provider } from 'react-redux'
 import store  from './redux/store'
 import './index.css';
 
+const Checkout  = React.lazy(() => import('./pages/Checkout/Checkout'));
+const CategoryList  = React.lazy(() => import('./pages/CategoryList/CategoryList'));
+const Home = React.lazy(() => import('./pages/Home/Home')); 
+const SignUp = React.lazy(() => import('./pages/SignUp/SignUp')); 
+const SignIn = React.lazy(() => import('./pages/SignIn/SignIn'));
+const ShoppingCart = React.lazy(() => import('./pages/ShoppingCart/ShoppingCart'));
+
 ReactDOM.render(
+
   <React.StrictMode>
      <Provider store={store}>
         <AppTheme>
           <Router>
             <Switch>   
-                <Route path='/login' name='LogIn' component={SignIn}/>
-                <Route path='/register' name='SignUp' component={SignUp}/>   
-                <Route path='/directory/:id' name='CategoryList' component={CategoryList}/> 
-                <Route path='/viewcart' name='ShoppingCart' component={ShoppingCart}/>
-                <Route path='/checkout' name='Checkout' component={Checkout}/>
-                <Route path='/' name='Home' component={Home}/>  
+                <Route path='/login' name='LogIn'>
+                  <Suspense fallback={<Spinner/>}>
+                    <SignIn/>  
+                  </Suspense>
+                </Route>
+                <Route path='/register' name='SignUp'> 
+                  <Suspense fallback={<Spinner/>}>
+                    <SignUp/>  
+                  </Suspense>
+                </Route>  
+                <Route path='/directory/:id' name='CategoryList'> 
+                  <Suspense fallback={<Spinner/>}>
+                    <CategoryList/>  
+                  </Suspense>
+                </Route>
+                <Route path='/viewcart' name='ShoppingCart'>
+                  <Suspense fallback={<Spinner/>}>
+                    <ShoppingCart/>  
+                  </Suspense>
+                </Route>
+                <Route path='/checkout' name='Checkout'>
+                  <Suspense fallback={<Spinner/>}>
+                    <Checkout/>  
+                  </Suspense>
+                </Route>
+                <Route path='/' name='Home'>
+                  <Suspense fallback={<Spinner/>}>
+                    <Home/>  
+                  </Suspense>
+                </Route>
             </Switch>
           </Router>
         </AppTheme>
