@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import { CardContent, 
-    Container, 
     Card,
-    Grid,
-    Button } from "@material-ui/core";
+    Grid
+     } from "@material-ui/core";
     
 import { useSelector } from 'react-redux';
 import useStyles from './SummaryCart.style';

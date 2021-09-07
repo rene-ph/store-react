@@ -21,11 +21,12 @@ const CategoryList = ({match}) => {
         if (category.length <= 5 ) {
             setShowFiveItems(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleShowMore = useCallback(() => {
         setShowFiveItems(false);
-    }, [])
+    }, []);
 
     return (
         <>
