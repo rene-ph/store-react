@@ -34,7 +34,7 @@ export const cartSlice = createSlice({
     remove: (state, action) => {
       // Remove the entire specific element from the state
       state.cart = state.cart.filter(item => item.id !== action.payload.id);
-    }
+    },
   },
 });
 

@@ -18,6 +18,9 @@ export const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
     },
+    wrapperBtn: {
+        marginTop: theme.spacing(3)
+    }
 }));
 
 export const QontoConnector = withStyles({

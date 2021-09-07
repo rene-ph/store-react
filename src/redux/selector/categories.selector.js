@@ -2,6 +2,8 @@ import { createSelector } from "@reduxjs/toolkit";
 
 export const category = (state) => state.storeCategories.categories;
 
+export const loading = (state) => state.storeCategories.isLoading;
+
 export const getCategories = createSelector(
     category, 
     (categories) => {
@@ -30,5 +32,12 @@ export const getByListOfCategoryById = (id) => createSelector(
     category, 
     (cat) => {
         return cat.filter(item => item.col_id === id);
+    }
+)
+
+export const getListOfCategories = () => createSelector(
+    getCategories,
+    (cat) => {
+         return cat.map( (item) => item.title);
     }
 )

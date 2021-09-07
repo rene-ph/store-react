@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import CategoryList from './pages/CategoryList/CategoryList';
 import Checkout from './pages/Checkout/Checkout';
@@ -6,7 +6,9 @@ import Home from './pages/Home/Home';
 import SignUp from './pages/SignUp/Signup';
 import SignIn from './pages/SignIn/Signin';
 import ShoppingCart from './pages/ShoppingCart/Shoppingcart';
+import Spinner from './components/Spinner/Spinner';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ErrorBoundary } from 'react-error-boundary'
 import AppTheme from './theme/index';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
@@ -14,18 +16,63 @@ import store  from './redux/store'
 import './index.css';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 
+const Checkout  = React.lazy(() => import('./pages/Checkout/Checkout'));
+const CategoryList  = React.lazy(() => import('./pages/CategoryList/CategoryList'));
+const Home = React.lazy(() => import('./pages/Home/Home')); 
+const SignUp = React.lazy(() => import('./pages/SignUp/SignUp')); 
+const SignIn = React.lazy(() => import('./pages/SignIn/SignIn'));
+const ShoppingCart = React.lazy(() => import('./pages/ShoppingCart/ShoppingCart'));
+const ErrorFallback = React.lazy(() => import('./components/ErrorFallback/ErrorFallback'));
+
 ReactDOM.render(
+
   <React.StrictMode>
      <Provider store={store}>
         <AppTheme>
           <Router>
-            <Switch>
-                <PublicRoute restricted={true} component={SignIn} path='/login' />
-                <PublicRoute restricted={true} component={SignUp} path='/register' />
-                <Route path='/directory/:id' name='CategoryList' component={CategoryList}/> 
-                <Route path='/viewcart' name='ShoppingCart' component={ShoppingCart}/>
-                <Route path='/checkout' name='Checkout' component={Checkout}/>
-                <Route path='/' name='Home' component={Home}/>  
+            <Switch>   
+                <Route path='/login' name='LogIn'>
+                  <Suspense fallback={<Spinner/>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <SignIn/> 
+                    </ErrorBoundary> 
+                  </Suspense>
+                </Route>
+                <Route path='/register' name='SignUp'> 
+                  <Suspense fallback={<Spinner/>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <SignUp/>  
+                    </ErrorBoundary>
+                  </Suspense>
+                </Route>  
+                <Route path='/directory/:id' name='CategoryList'>
+                  <Suspense fallback={<Spinner/>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <CategoryList  /> 
+                    </ErrorBoundary> 
+                  </Suspense>
+                </Route>
+                <Route path='/viewcart' name='ShoppingCart'>
+                  <Suspense fallback={<Spinner/>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <ShoppingCart/> 
+                    </ErrorBoundary> 
+                  </Suspense>
+                </Route>
+                <Route path='/checkout' name='Checkout'>
+                  <Suspense fallback={<Spinner/>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <Checkout/>  
+                    </ErrorBoundary>
+                  </Suspense>
+                </Route>
+                <Route path='/' name='Home'>
+                  <Suspense fallback={<Spinner/>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                      <Home/>  
+                    </ErrorBoundary>
+                  </Suspense>
+                </Route>
             </Switch>
           </Router>
         </AppTheme>

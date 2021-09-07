@@ -54,7 +54,7 @@ const Cart = (props) => {
                     <Grid item xs={12} lg={4} >
                         <p>{props.name}</p>
                     </Grid>
-                    <Grid item xs={12} lg={2}>
+                    <Grid item xs={12} lg={2} align="center">
                         <TextField label="Quantity" 
                                    variant="outlined"
                                    type="number" 
