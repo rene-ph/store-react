@@ -59,7 +59,7 @@ export default function CustomizedStepper(props) {
                 ))}
             </Stepper>
             <form noValidate autoComplete="off">
-                <div>
+                <div >
                     {activeStep === steps.length ? (
                         <div>
                             <Typography variant="h3" gutterBottom>
@@ -67,9 +67,9 @@ export default function CustomizedStepper(props) {
                             </Typography>
                         </div>
                     ) : (
-                        <div>
+                        <div> 
                             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-                            <div>
+                            <div className={classes.wrapperBtn}>
                                 <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
                                     Back
                                 </Button>

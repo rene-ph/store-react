@@ -1,6 +1,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
+import { useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CategoryItem from '../../components/CategoryItem/CategoryItem';
 import Navbar from '../../components/Navbar/Navbar';
@@ -8,11 +9,12 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import useStyles from './CategoryList.style';
 import { getByListOfCategoryById, getListOfCategories } from '../../redux/selector/categories.selector';
 
-const CategoryList = ({match}) => {
-
-    const category = useSelector(getByListOfCategoryById(parseInt(match.params.id, 10)));
+const CategoryList = () => {
+    const path = useRouteMatch();
+    const id = parseInt(path.params.id, 10);
+    const category = useSelector(getByListOfCategoryById(id));
     const categoryList = useSelector(getListOfCategories());
-    const categoryTitle = categoryList[parseInt(match.params.id, 10) -1];
+    const categoryTitle = categoryList[id -1];
     const classes = useStyles();
 
     const [showFiveItems, setShowFiveItems] = useState(true);
