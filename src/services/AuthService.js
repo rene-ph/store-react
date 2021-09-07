@@ -6,7 +6,7 @@ const AuthService = {
                 .then(response => response.data);
     },
     get_user: (payload) => {
-        return API.post(`${STORE_END_POINT.GET_USER}`, payload)
+        return API.get(`${STORE_END_POINT.GET_USER}`, payload)
                 .then(response => response.data);
     },
     signup:  (payload) => {

@@ -1,5 +1,8 @@
+import jwt_decode from "jwt-decode";
+
 // Nombre del token que se almacena en el LocalStorage para la sesion
 const TOKEN_KEY = "auth.token";
+const USER_DATA = "auth.user";
 
 export const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/gm;
 
@@ -40,19 +43,66 @@ export const getListOfCategory = (id) => {
 export const isLoggedIn = () => localStorage.getItem(TOKEN_KEY) ? true : false;
 
 /**
+ * Searches for the token stored at the localstorage
+ * 
+ * @returns {string} Returns an string for the token stored
+ */
+export const getLocalToken = () => {
+    let token = localStorage.getItem(TOKEN_KEY);
+
+    token = token && isJwtExpired(token) ? null : token;
+
+    return token;
+}
+
+/**
+ * Searches for the user already logged in and stored at the localstorage
+ * 
+ * @returns Returns an object
+ */
+export const getLocalUser = () => {
+    let stringUser = localStorage.getItem(USER_DATA);
+    let user = null;
+
+    if (stringUser) {
+        user = JSON.parse(stringUser);
+    }
+
+    return user;
+}
+
+/**
+ * Sets at localstorage an string of the user data in JSON format.
+ * 
+ * @param {object} user Object containing data of the user
+ */
+export const setLocalUser = (user) => {
+    if (user) {
+        localStorage.setItem(USER_DATA, JSON.stringify(user));
+    }
+}
+
+/**
  * Agrega el token obtenido del login en el localstorage
  * 
  * @param {string} token Token obtenido del servidor y almacenar en localstorage
  */
-export const setLogin = (token) => {
+export const setLocalToken = (token) => {
     localStorage.setItem(TOKEN_KEY, token);
 }
 
 /**
  * Remueve el token utilizado para login del localstorage
  */
-export const unsetLogin = () => {
+export const removeLocalToken = () => {
     localStorage.removeItem(TOKEN_KEY);
+}
+
+/**
+ * Remueve los datos de usuario almacenados en el localstorage
+ */
+export const removeLocalUser = () => {
+    localStorage.removeItem(USER_DATA);
 }
 
 /**
@@ -132,7 +182,7 @@ export const validForm = (form) => {
     let ret = true;
 
     if (form) {
-        for (var [,value] of Object.entries(form)) {
+        for (var [, value] of Object.entries(form)) {
             ret = value.error === null;
             if (!ret)
                 break;
@@ -143,3 +193,22 @@ export const validForm = (form) => {
 
     return ret;
 }
+
+/**
+ * Prueba si el token jwt recibido esta expirado.
+ * 
+ * @param {string} token Token en formato jwt para validar
+ * @returns True si elk token ha expirado.
+ */
+export const isJwtExpired = (token) => {
+    if (token !== null && typeof token !== "undefined" && token !== "") {
+        var decoded = jwt_decode(token);
+        var now = new Date().getTime();
+
+        //Se multiplica por 1000 ya que la libreria regresa el tiempo de expiracion 
+        // lo regresa en segundos y poder pasarlo a milisegundos
+        return now > decoded.exp * 1000;
+    } else {
+        return true;
+    }
+};

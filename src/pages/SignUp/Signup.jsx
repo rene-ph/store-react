@@ -10,10 +10,10 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import useStyles from './Signup.style';
-import { setToken } from "../../redux/authSlice";
+import { setToken, setUser } from "../../redux/authSlice";
 import AuthService from '../../services/AuthService';
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../utils/utils";
+import { setLocalToken, setLocalUser } from "../../utils/utils";
 
 import {
   usernameValidator,
@@ -73,15 +73,22 @@ const SignUp = () => {
 
     if (validForm(values)) {
       try {
-        let data = await AuthService.signup({
+        let token_data = await AuthService.signup({
           email: values.email.value,
           displayName: values.display_name.value,
           password: values.password.value,
         });
 
-        dispatch(setToken(data.data.token));
-
-        setLogin(data.data.token);
+        let user_data = await AuthService.get_user({
+          headers: {'x-auth-token': token_data.data.token },
+        });
+        
+        if(token_data.data.token && user_data.data){
+          dispatch(setToken(token_data.data.token));
+          dispatch(setUser(user_data.data));
+          setLocalToken(token_data.data.token);
+          setLocalUser(user_data.data);
+        }
 
         history.push('/');
       } catch (error) {

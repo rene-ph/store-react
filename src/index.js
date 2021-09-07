@@ -13,8 +13,6 @@ import { Provider } from 'react-redux'
 import store  from './redux/store'
 import './index.css';
 import PublicRoute from './components/PublicRoute/PublicRoute';
-import PrivateRoute from './components/PrivateRoute/PrivateRoute';
-import Logout from './components/Logout/Logout';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -24,7 +22,6 @@ ReactDOM.render(
             <Switch>
                 <PublicRoute restricted={true} component={SignIn} path='/login' />
                 <PublicRoute restricted={true} component={SignUp} path='/register' />
-                <PrivateRoute component={Logout} path="/logout" />
                 <Route path='/directory/:id' name='CategoryList' component={CategoryList}/> 
                 <Route path='/viewcart' name='ShoppingCart' component={ShoppingCart}/>
                 <Route path='/checkout' name='Checkout' component={Checkout}/>

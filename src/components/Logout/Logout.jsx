@@ -1,14 +1,14 @@
 import { Redirect } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { signOut } from "../../redux/authSlice";
-import { unsetLogin } from "../../utils/utils";
+import { removeLocalToken } from "../../utils/utils";
 
 
 const Logout = () => {
     const dispatch = useDispatch();
 
     dispatch(signOut());
-    unsetLogin();
+    removeLocalToken();
 
     return <Redirect to="/" />;
 };

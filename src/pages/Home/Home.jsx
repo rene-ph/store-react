@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import { useSelector } from 'react-redux';
@@ -22,24 +22,24 @@ const Home = () => {
                 dispatch(add(result.data));
             }
         })();
-    },[]);
+    }, []);
 
     return (
-            <>
+        <>
             <Navbar></Navbar>
-            <br/>
+            <br />
             <Carousel></Carousel>
-            <br/><br/><br/>
+            <br /><br /><br />
             <Grid container justifyContent='center'>
-                { categories ?  (categories.map((category, index) => {
-                    return (  <Grid item xs={12} lg={3}  key={index} > 
-                                <Categorycard 
-                                        title={category.title} 
-                                        id={category.col_id}
+                {categories ? (categories.map((category, index) => {
+                    return (<Grid item xs={12} lg={3} key={index} >
+                        <Categorycard
+                            title={category.title}
+                            id={category.col_id}
 
-                                        image={category.url}/> 
-                              </Grid>)
-                })): null }
+                            image={category.url} />
+                    </Grid>)
+                })) : null}
             </Grid>
         </>
     )
