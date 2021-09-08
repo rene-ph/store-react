@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import useStyles from './Signin.style';
+import useStyles from './SignIn.style';
 import AuthService from '../../services/AuthService';
 import { setToken, setUser } from "../../redux/authSlice";
 import {

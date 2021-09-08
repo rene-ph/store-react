@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  categories: [],
-  isLoading: true,
+  categories: []
 }
 
 export const categoriesSlice = createSlice({
@@ -11,9 +10,6 @@ export const categoriesSlice = createSlice({
   reducers: {
     add: (state, action) => {
       state.categories = action.payload;
-    },
-    setLoading: (state, action) => {
-      state.isLoading = action.payload;
     }
   },
 });
