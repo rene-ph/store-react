@@ -12,6 +12,8 @@ export const displayNameRegex = /^[a-zA-Z0-9]{3,15}$/g;
 
 export const creditcarRegex = /^((4\d{3})|(5[1-5]\d{2})|(6011)|(7\d{3}))-?\d{4}-?\d{4}-?\d{4}|3[4,7]\d{13}$/g;
 
+export const expirationRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/g;
+
 export const toUniqueArray = (a) => {
     let newArr = [];
     for (let index = 0; index < a.length; index++) {
@@ -164,6 +166,52 @@ export const passwordValidator = (value) => {
 
     if (!valid && !value.match(passwordRegex)) {
         msg = "Please use more than 4 character password requiring numbers and both lowercase and uppercase letters.";
+    } else {
+        valid = true;
+    }
+
+    return { valid, msg };
+};
+
+export const requiredField = (value) => {
+    let valid = false, msg = null;
+
+    if (!value) {
+        msg = "This field is required.";
+    }
+
+    return { valid, msg };
+};
+
+export const optionalField = () => true;
+
+
+export const creditCardValidator = (value) => {
+    let valid = false, msg = null;
+
+    if (!value) {
+        msg = "This field is required.";
+    }
+
+    if (!valid && !value.match(creditcarRegex)) {
+        msg = "Credit card number is not valid.";
+    } else {
+        valid = true;
+    }
+
+    return { valid, msg };
+};
+
+
+export const expirationDateValidator = (value) => {
+    let valid = false, msg = null;
+
+    if (!value) {
+        msg = "This field is required.";
+    }
+
+    if (!valid && !value.match(expirationRegex)) {
+        msg = "Credit card number is not valid.";
     } else {
         valid = true;
     }

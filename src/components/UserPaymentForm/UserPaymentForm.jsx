@@ -1,41 +1,34 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import InputMask from 'react-input-mask';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { useStyles } from "./UserPaymentForm.styles";
-import { creditcarRegex } from '../../utils/utils';
 
-const UserPaymentForm = () => {
+const UserPaymentForm = ({ formPayment, saveForm }) => {
 
-    const initialFields = {
-        card_number: {
-            value: "",
-            error: ""
-        }
-    }
+    // const initialFields = {
+    //     card_number: {
+    //         value: "",
+    //         error: ""
+    //     }
+    // }
 
     const classes = useStyles();
-    const [fields, setFields] = useState(initialFields)
+    // const [fields, setFields] = useState(initialFields)
 
     const handleInputValue = (event) => {
         const { name, value } = event.target;
+        let { msg: error } = formPayment[name].validator(value);
 
-        if (name === "card_number") {
-            let val = value.replaceAll("-", ""), error = "";
-            
-            error = val ? "" : "This field is required.";
-
-            error = error === "" && val.match(creditcarRegex) ? "" : "Credit card number is not valid."
-
-            setFields({
-                ...fields,
-                card_number:{
-                    value: val,
-                    error
-                }
-            });
-        }
+        saveForm({
+            ...formPayment,
+            [name]: {
+                ...formPayment[name],
+                error,
+                value
+            }
+        });
     };
 
     return (
@@ -48,20 +41,22 @@ const UserPaymentForm = () => {
                     <InputMask
                         mask="9999-9999-9999-9999"
                         maskChar={null}
-                        value={fields.card_number.value}
-                        onChange={handleInputValue}
-                    >
-                        {() =>
-                            <TextField
-                                variant="outlined"
+                        value={formPayment.card_number.value}
+                        variant="outlined"
                                 margin="normal"
                                 required
                                 fullWidth
                                 id="id_card_number"
                                 label="Card number"
                                 name="card_number"
-                                autoFocus
-                                {...(fields.card_number.error !== "" && { error: true, helperText: fields.card_number.error })}
+                                onChange={handleInputValue}
+                                onBlur={handleInputValue}
+                                {...(formPayment.card_number.error && { error: true, helperText: formPayment.card_number.error })}
+                    >
+                        {(inputProps) =>
+                            <TextField
+                                {...inputProps}
+                                
                             />
                         }
                     </InputMask>
@@ -74,25 +69,35 @@ const UserPaymentForm = () => {
                         id="id_name_on_card"
                         label="Name on card"
                         name="name_on_card"
-                        autoFocus
+                        required
                         type="text"
                         className={classes.uppercase}
+                        value={formPayment.name_on_card.value}
+                        onChange={handleInputValue}
+                        onBlur={handleInputValue}
+                        {...(formPayment.name_on_card.error && { error: true, helperText: formPayment.name_on_card.error })}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <InputMask
                         mask="99/99"
                         maskChar={null}
-                    >
-                        {() =>
-                            <TextField
-                                variant="outlined"
+                        value={formPayment.expiration.value}
+                        onChange={handleInputValue}
+                        onBlur={handleInputValue}
+                        variant="outlined"
                                 margin="normal"
                                 fullWidth
                                 id="id_expiration"
                                 label="Expiration date (MM/YY)"
                                 name="expiration"
-                                autoFocus
+                                required
+                                {...(formPayment.expiration.error && { error: true, helperText: formPayment.expiration.error })}
+                    >
+                        {(inputProps) =>
+                            <TextField
+                                {...inputProps}
+                                
                             />
                         }
                     </InputMask>
@@ -105,11 +110,15 @@ const UserPaymentForm = () => {
                         id="id_security_code"
                         label="Security code"
                         name="security_code"
-                        autoFocus
+                        required
                         inputProps={{
                             maxLength: 3,
                             minLength: 3
                         }}
+                        value={formPayment.security_code.value}
+                        onChange={handleInputValue}
+                        onBlur={handleInputValue}
+                        {...(formPayment.security_code.error && { error: true, helperText: formPayment.security_code.error })}
                     />
                 </Grid>
             </Grid>

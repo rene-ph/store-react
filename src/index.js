@@ -16,6 +16,7 @@ const SignUp = React.lazy(() => import('./pages/SignUp/Signup'));
 const SignIn = React.lazy(() => import('./pages/SignIn/Signin'));
 const ShoppingCart = React.lazy(() => import('./pages/ShoppingCart/Shoppingcart'));
 const ErrorFallback = React.lazy(() => import('./components/ErrorFallback/ErrorFallback'));
+const NotFound = React.lazy(() => import('./pages/NotFound/NotFound'));
 
 ReactDOM.render(
 
@@ -32,6 +33,7 @@ ReactDOM.render(
                 <Route path='/viewcart' name='ShoppingCart' component={ShoppingCart} />
                 <Route path='/checkout' name='Checkout' component={Checkout} />
                 <Route exact path='/' name='Home' component={Home} />
+                <Route name='Error' component={NotFound}/>
               </Switch>
             </Router>
           </ErrorBoundary>
