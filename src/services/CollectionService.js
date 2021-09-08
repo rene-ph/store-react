@@ -1,4 +1,5 @@
 import axios from "axios"
+import { API, STORE_END_POINT } from './config';
 
 axios.interceptors.response.use(
     response => response,
@@ -11,11 +12,9 @@ axios.interceptors.response.use(
     }
   )
 
-
-
 export const fetchCollections = async () => {
     try {
-        const response = await axios.get("/api/store/collections");
+        const response = await API.get(`${STORE_END_POINT.STORE_COLLECTIONS}`);
         const { data } = response;
         if (response.status === 200) return data;
         return { hasError: true, message: response.statusText}

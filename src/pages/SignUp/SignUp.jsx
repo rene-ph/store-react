@@ -13,13 +13,15 @@ import useStyles from './SignUp.style';
 import { setToken, setUser } from "../../redux/authSlice";
 import AuthService from '../../services/AuthService';
 import { useDispatch } from "react-redux";
-import { setLocalToken, setLocalUser } from "../../utils/utils";
 
 import {
+  setLocalToken,
+  setLocalUser,
   usernameValidator,
   emailValidator,
   passwordValidator,
-  validForm
+  validForm,
+  getFormErrors
 } from '../../utils/utils';
 
 const formInfo = {
@@ -45,43 +47,49 @@ const formInfo = {
 
 const alertInit = {
   formAlertOpen: false,
-  error: {}
+  type: '',
+  text: '',
 }
 
 const SignUp = () => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
-  const [values, setValues] = useState(formInfo);
+  const [currentForm, setCurrentForm] = useState(formInfo);
   const [alertInfo, setAlertInfo] = useState(alertInit);
+
+  const closeAlert = () => {
+    setTimeout(() => {
+      onCloseAlertForm();
+    }, 600);
+  }
 
   const onCloseAlertForm = () => {
     setAlertInfo({
-      ...values,
-      error: {
-        severity: "warning",
-        title: ""
-      },
       formAlertOpen: false,
+      type: '', 
+      text: ''
     });
   }
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    var severity = "success", title = "Redirecting...", showAlert = false;
 
-
-    if (validForm(values)) {
+    if (validForm(currentForm)) {
       try {
         let token_data = await AuthService.signup({
-          email: values.email.value,
-          displayName: values.display_name.value,
-          password: values.password.value,
+          email: currentForm.email.value,
+          displayName: currentForm.display_name.value,
+          password: currentForm.password.value,
         });
+
+        console.log(token_data);
 
         let user_data = await AuthService.get_user({
           headers: {'x-auth-token': token_data.data.token },
         });
+
+        console.log(user_data);
         
         if(token_data.data.token && user_data.data){
           dispatch(setToken(token_data.data.token));
@@ -89,48 +97,35 @@ const SignUp = () => {
           setLocalToken(token_data.data.token);
           setLocalUser(user_data.data);
         }
-
+        setAlertInfo({ formAlertOpen: true, type: 'success', text: 'Redirecting...'});
+        closeAlert();
         history.push('/');
       } catch (error) {
         if (error.response && error.response.status === 400
           && !error.response.data.success
           && error.response.data.message === "email already registered!") {
-          severity = "warning";
-          title = "This email has been registered already, please try again!";
+            setAlertInfo({ formAlertOpen: true, type: 'error', text: 'Email already registered!'});
+            closeAlert();
         } else {
-          severity = "error";
-          title = "An error ocurred while logging in, please try again!";
+          setAlertInfo({ formAlertOpen: true, type: 'error', text: 'An error ocurred while logging in, please try again!'});
+          closeAlert();
         }
-        showAlert = true;
       }
     } else {
-      severity = "warning";
-      title = "Check the data entered it might be not valid!";
-      showAlert = true;
+      setAlertInfo({ formAlertOpen: true, type: 'error', text: getFormErrors(currentForm)});
+      closeAlert();
     }
 
-    if (showAlert) {
-      setAlertInfo({
-        ...values,
-        error: {
-          severity,
-          title,
-        },
-        formAlertOpen: true,
-      });
-    }
   };
 
   const handleInputValue = (event) => {
     const { name, value } = event.target;
-    let { msg: error } = values[name].validator(value);
-
-    setValues({
-      ...values,
+    setCurrentForm({
+      ...currentForm,
       [name]: {
-        ...values[name],
-        error,
-        value
+        ...currentForm[name],
+        value: value,
+        error: currentForm[name].validator(value).msg
       }
     });
   };
@@ -147,13 +142,18 @@ const SignUp = () => {
 
   return (
     <Container component="main" maxWidth="xs" className={classes.signincont}>
-      {alertInfo.formAlertOpen &&
+           {alertInfo.formAlertOpen ?
         <Alert
-          severity={alertInfo.error.severity}
+          variant="filled" 
+          severity={alertInfo.type}
           onClose={onCloseAlertForm}
         >
-          {alertInfo.error.title}
-        </Alert>
+          { Array.isArray(alertInfo.text) ? 
+           alertInfo.text.map((item) => {
+           return (
+              <p>{item}</p>)
+           }) : <p>{alertInfo.text}</p> }
+        </Alert> : null
       }
       <CssBaseline />
       <div className={classes.paper}>
@@ -178,10 +178,10 @@ const SignUp = () => {
                 id="id_display_name"
                 label="Username"
                 autoFocus
-                value={values.display_name.value}
+                value={currentForm.display_name.value}
                 onChange={handleInputValue}
                 onBlur={handleInputValue}
-                {...(values.display_name.error && { error: true, helperText: values.display_name.error })}
+                {...(currentForm.display_name.error && { error: true, helperText: currentForm.display_name.error })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -193,10 +193,10 @@ const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                value={values.email.value}
+                value={currentForm.email.value}
                 onChange={handleInputValue}
                 onBlur={handleInputValue}
-                {...(values.email.error && { error: true, helperText: values.email.error })}
+                {...(currentForm.email.error && { error: true, helperText: currentForm.email.error })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -209,10 +209,10 @@ const SignUp = () => {
                 type="password"
                 id="id_password"
                 autoComplete="current-password"
-                value={values.password.value}
+                value={currentForm.password.value}
                 onChange={handleInputValue}
                 onBlur={handleInputValue}
-                {...(values.password.error && { error: true, helperText: values.password.error })}
+                {...(currentForm.password.error && { error: true, helperText: currentForm.password.error })}
               />
             </Grid>
           </Grid>
