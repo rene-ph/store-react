@@ -11,6 +11,8 @@ axios.interceptors.response.use(
     }
   )
 
+
+
 export const fetchCollections = async () => {
     try {
         const response = await axios.get("/api/store/collections");

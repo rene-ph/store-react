@@ -9,7 +9,7 @@ import StorefrontOutlinedIcon from '@material-ui/icons/StorefrontOutlined';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import useStyles from './Signup.style';
+import useStyles from './SignUp.style';
 import { setToken, setUser } from "../../redux/authSlice";
 import AuthService from '../../services/AuthService';
 import { useDispatch } from "react-redux";
