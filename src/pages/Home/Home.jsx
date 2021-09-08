@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Categorycard from '../../components/CategoryCard/CategoryCard';
 import Carousel from '../../components/Carousel/Carousel';
 import Navbar from '../../components/Navbar/Navbar';
-import { fetchCollections } from '../../api/store.service';
+import { fetchCollections } from '../../services/CollectionService';
 import { add } from '../../redux/categoriesSlice';
 import { getCategories } from '../../redux/selector/categories.selector';
 import { useErrorHandler } from 'react-error-boundary'
