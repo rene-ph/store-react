@@ -171,6 +171,20 @@ export const validForm = (form) => {
     return ret;
 }
 
+export const getFormErrors = (form) => {
+    let errors = [];
+
+    if (form) {
+        for (var [, value] of Object.entries(form)) {
+            if (value.error) {
+                errors.push(value.error);
+            }
+        }
+    } 
+
+    return errors;
+}
+
 /**
  * Prueba si el token jwt recibido esta expirado.
  * 
