@@ -8,4 +8,10 @@ export const useStyles = makeStyles((theme) => ({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
+    mainCard: {
+        // marginTop: theme.spacing(3),
+        '& .card--content':{
+            padding: theme.spacing(5),
+        }
+    }
 }));

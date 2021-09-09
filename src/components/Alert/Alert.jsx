@@ -13,7 +13,7 @@ const Alert = () => {
     return (
         <Snackbar open={openModal.state} 
             className={classes.root}
-            autoHideDuration={600}
+            autoHideDuration={openModal.autoHideDuration}
             onClose={() => { dispatch(setDisplayModal({ state: false, text: '', type: '' })) } }
             anchorOrigin={{ vertical: "top", horizontal: "right" }}>
                 <MaterialAlert severity={openModal.type}>

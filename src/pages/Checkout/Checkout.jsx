@@ -1,21 +1,34 @@
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Container } from "@material-ui/core";
-import Grid  from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid";
+import CustomizedStepper from "../../components/CustomizedStepper";
+import { useStyles } from "./Checkout.styles";
 import { useSelector } from 'react-redux';
-import CustomizedStepper  from "../../components/CustomizedStepper";
+import { getAuthData } from "../../redux/selector/auth.selector";
 
 const Checkout = () => {
-
-    const user = useSelector((state) => state.storeCheckout.checkout.user)
+    const classes = useStyles();
+    const history = useHistory();
+    const auth = useSelector(getAuthData);
 
     const handleCheckout = () => {
-       console.log(user);
     }
 
+    useEffect(() => {
+        if (!auth.token || !auth.user) {
+            history.push({
+                pathname: '/login',
+                search: '?next=/checkout'
+              });
+        }
+    }, [auth]);
+
     return (
-        <Container maxWidth='lg'>
+        <Container maxWidth='md' className={classes.container}>
             <Grid container >
                 <Grid item xs={12} lg={12}>
-                    <CustomizedStepper checkout={handleCheckout}/> 
+                    <CustomizedStepper checkout={handleCheckout} />
                 </Grid>
             </Grid>
         </Container>

@@ -12,6 +12,8 @@ export const displayNameRegex = /^[a-zA-Z0-9]{3,15}$/g;
 
 export const creditcarRegex = /^((4\d{3})|(5[1-5]\d{2})|(6011)|(7\d{3}))-?\d{4}-?\d{4}-?\d{4}|3[4,7]\d{13}$/g;
 
+export const expirationRegex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/g;
+
 /**
  * Chequea si el token ya se encuentra respaldado en el localstorage
  * 
@@ -148,6 +150,54 @@ export const passwordValidator = (value) => {
     return { valid, msg };
 };
 
+export const requiredField = (value) => {
+    let valid = false, msg = null;
+
+    if (!value) {
+        msg = "This field is required.";
+    }
+
+    return { valid, msg };
+};
+
+export const optionalField = () => {
+    return { valid: true, msg: null };
+};
+
+
+export const creditCardValidator = (value) => {
+    let valid = false, msg = null;
+
+    if (!value) {
+        msg = "This field is required.";
+    }
+
+    if (!valid && !value.match(creditcarRegex)) {
+        msg = "Credit card number is not valid.";
+    } else {
+        valid = true;
+    }
+
+    return { valid, msg };
+};
+
+
+export const expirationDateValidator = (value) => {
+    let valid = false, msg = null;
+
+    if (!value) {
+        msg = "This field is required.";
+    }
+
+    if (!valid && !value.match(expirationRegex)) {
+        msg = "Expiration Date is not valid.";
+    } else {
+        valid = true;
+    }
+
+    return { valid, msg };
+};
+
 /**
  * Checks if the form received contains all error attributes with null
  * to determine that the form is valid.
@@ -161,6 +211,9 @@ export const validForm = (form) => {
     if (form) {
         for (var [, value] of Object.entries(form)) {
             ret = value.error === null;
+
+            ret = value.required ? ret && value.value !== "" : ret;
+
             if (!ret)
                 break;
         }
