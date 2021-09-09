@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Avatar from '@material-ui/core/Avatar';
 import Alert from '@material-ui/lab/Alert';
@@ -40,10 +40,15 @@ const alertInit = {
   error: {}
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 const SignIn = () => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
+  const queryParams = useQuery();
   const [values, setValues] = useState(formInfo);
   const [alertInfo, setAlertInfo] = useState(alertInit);
 
@@ -59,17 +64,19 @@ const SignIn = () => {
         });
 
         let user_data = await AuthService.get_user({
-          headers: {'x-auth-token': token_data.data.token },
+          headers: { 'x-auth-token': token_data.data.token },
         });
-        
-        if(token_data.data.token && user_data.data){
+
+        if (token_data.data.token && user_data.data) {
           dispatch(setToken(token_data.data.token));
           dispatch(setUser(user_data.data));
           setLocalToken(token_data.data.token);
           setLocalUser(user_data.data);
         }
 
-        history.push('/');
+        let next = queryParams.get("next");
+
+        history.push(next ? next : '/');
       } catch (error) {
         if (error.response && error.response.status === 400
           && !error.response.data.success

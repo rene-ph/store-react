@@ -31,16 +31,16 @@ export const QontoConnector = withStyles({
     },
     active: {
         '& $line': {
-            borderColor: '#784af4',
+            borderColor: '#616161',
         },
     },
     completed: {
         '& $line': {
-            borderColor: '#784af4',
+            borderColor: '#616161',
         },
     },
     line: {
-        borderColor: '#eaeaf0',
+        borderColor: '#9e9e9e',
         borderTopWidth: 3,
         borderRadius: 1,
     },
@@ -54,7 +54,7 @@ export const useQontoStepIconStyles = makeStyles({
         alignItems: 'center',
     },
     active: {
-        color: '#784af4',
+        color: '#616161',
     },
     circle: {
         width: 8,
@@ -63,7 +63,7 @@ export const useQontoStepIconStyles = makeStyles({
         backgroundColor: 'currentColor',
     },
     completed: {
-        color: '#784af4',
+        color: '#616161',
         zIndex: 1,
         fontSize: 18,
     },

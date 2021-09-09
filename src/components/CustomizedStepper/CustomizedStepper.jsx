@@ -1,100 +1,32 @@
 import { useState } from 'react';
+import { useDispatch } from "react-redux";
+import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import SummaryCart from '../SummaryCart/SummaryCart';
-import Typography from '@material-ui/core/Typography';
+import PurchaseConfirmation from '../PurchaseConfirmation/PurchaseConfirmation';
 import UserInfoForm from '../UserInfoForm/UserInfoForm';
 import UserPaymentForm from '../UserPaymentForm';
+import Alert from '../Alert/Alert';
 import { QontoConnector, QontoStepIcon } from "./CustomizeStepper.styles";
 import { useStyles } from "./CustomizeStepper.styles";
-import {
-    emailValidator,
-    validForm,
-    requiredField,
-    optionalField,
-    creditCardValidator
-} from '../../utils/utils';
-
-const formUser = {
-    email: {
-        id: "id_email",
-        value: "",
-        error: null,
-        validator: emailValidator
-    },
-    first_name: {
-        id: "id_first_name",
-        value: "",
-        error: null,
-        validator: requiredField
-    },
-    last_name: {
-        id: "id_last_name",
-        value: "",
-        error: null,
-        validator: requiredField
-    },
-    company: {
-        id: "id_company",
-        value: "",
-        error: null,
-        validator: optionalField
-    },
-    address: {
-        id: "id_address",
-        value: "",
-        error: null,
-        validator: requiredField
-    },
-    city: {
-        id: "id_city",
-        value: "",
-        error: null,
-        validator: requiredField
-    }
-};
-
-
-const formPayment = {
-    card_number: {
-        id: "id_card_number",
-        value: "",
-        error: null,
-        validator: creditCardValidator
-    },
-    name_on_card: {
-        id: "id_name_on_card",
-        value: "",
-        error: null,
-        validator: requiredField
-    },
-    expiration: {
-        id: "id_expiration",
-        value: "",
-        error: null,
-        validator: requiredField
-    },
-    security_code: {
-        id: "id_security_code",
-        value: "",
-        error: null,
-        validator: requiredField
-    }
-};
+import { setDisplayModal } from '../../redux/rootSlice';
+import { isValidUserInfo, isValidPaymentInfo } from '../../redux/selector/checkout.selector';
+import { Box } from '@material-ui/core';
 
 function getSteps() {
     return ['Cart', 'Information', 'Payment'];
 }
 
 export default function CustomizedStepper(props) {
+    const dispatch = useDispatch();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const steps = getSteps();
-
-    const [formUserInfo, setFormUserInfo] = useState(formUser);
-    const [formUserPayment, setFormUserPayment] = useState(formPayment);
+    const isValidUser = useSelector(isValidUserInfo);
+    const isValidPayment = useSelector(isValidPaymentInfo);
 
     const handleNext = () => {
         if(validateForm()){
@@ -102,6 +34,13 @@ export default function CustomizedStepper(props) {
                 props.checkout();
             }
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        } else {
+            dispatch(setDisplayModal({
+                type: 'error',
+                state: true,
+                text: "The information is invalid, please check before continuing.",
+                autoHideDuration: 5000
+            }));
         }
     };
 
@@ -114,21 +53,9 @@ export default function CustomizedStepper(props) {
             case 0:
                 return true;
             case 1:
-                return validForm(formUserInfo);
-            default:
-                return false;
-        }
-        
-    };
-
-    const saveForm = (form) => {
-        switch (activeStep) {
-            case 1:
-                setFormUserInfo(form);
-                break; 
+                return isValidUser;
             case 2:
-                setFormUserPayment(form);
-                break;    
+                return isValidPayment;
             default:
                 return false;
         }
@@ -140,9 +67,9 @@ export default function CustomizedStepper(props) {
             case 0:
                 return <SummaryCart/>;
             case 1:
-                return <UserInfoForm formUser={formUserInfo} saveForm={saveForm} />;
+                return <UserInfoForm />;
             case 2:
-                return <UserPaymentForm formPayment={formUserPayment} saveForm={saveForm} />;
+                return <UserPaymentForm />;
             default:
                 return 'Unknown step';
         }
@@ -150,7 +77,7 @@ export default function CustomizedStepper(props) {
 
     return (
         <div className={classes.root}>
-            
+            <Alert />
             <Stepper
                 alternativeLabel
                 activeStep={activeStep}
@@ -165,27 +92,25 @@ export default function CustomizedStepper(props) {
             <form noValidate autoComplete="off">
                 <div >
                     {activeStep === steps.length ? (
-                        <div>
-                            <Typography variant="h3" gutterBottom>
-                                All steps completed - you&apos;re finished
-                            </Typography>
-                        </div>
+                        <PurchaseConfirmation />
                     ) : (
                         <div> 
                             {getStepContent(activeStep)}
-                            <div className={classes.wrapperBtn}>
-                                <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                                    Back
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleNext}
-                                    className={classes.button}
-                                >
-                                    {activeStep === steps.length - 1 ? 'Pay now' : 'Next'}
-                                </Button>
-                            </div>
+                            <Box display="flex" justifyContent="flex-end">
+                                <div className={classes.wrapperBtn}>
+                                    <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                                        Back
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        className={classes.button}
+                                    >
+                                        {activeStep === steps.length - 1 ? 'Pay now' : 'Next'}
+                                    </Button>
+                                </div>
+                            </Box>
                         </div>
                     )}
                 </div>

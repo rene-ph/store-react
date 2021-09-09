@@ -36,6 +36,7 @@ ReactDOM.render(
                     <Route path='/viewcart' name='ShoppingCart' component={ShoppingCart} />
                     <Route path='/checkout' name='Checkout' component={Checkout} />
                     <Route exact path='/' name='Home' component={Home} />
+                    <Route name='Error' component={NotFound} />
                   </Switch>
                 </Router>
               </ErrorBoundary>

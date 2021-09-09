@@ -160,7 +160,9 @@ export const requiredField = (value) => {
     return { valid, msg };
 };
 
-export const optionalField = () => true;
+export const optionalField = () => {
+    return { valid: true, msg: null };
+};
 
 
 export const creditCardValidator = (value) => {
@@ -188,7 +190,7 @@ export const expirationDateValidator = (value) => {
     }
 
     if (!valid && !value.match(expirationRegex)) {
-        msg = "Credit card number is not valid.";
+        msg = "Expiration Date is not valid.";
     } else {
         valid = true;
     }
@@ -209,6 +211,9 @@ export const validForm = (form) => {
     if (form) {
         for (var [, value] of Object.entries(form)) {
             ret = value.error === null;
+
+            ret = value.required ? ret && value.value !== "" : ret;
+
             if (!ret)
                 break;
         }

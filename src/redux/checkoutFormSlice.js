@@ -2,12 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   checkout: {
-        user: {
-            email: null
-        },
-        payment: {
-            card: null
-        }
+    user: null,
+    payment: null
   },
 }
 
@@ -15,12 +11,12 @@ export const checkoutSlice = createSlice({
   name: 'checkout',
   initialState,
   reducers: {
-      updateUserInfo: (state, action) => {
-          state.checkout.user = action.payload
-      },
-      updateUserPayment: (state, action) => {
-        state.checkout.payment = action.payload
-      }
+    updateUserInfo: (state, action) => {
+      state.checkout.user = action.payload
+    },
+    updateUserPayment: (state, action) => {
+      state.checkout.payment = action.payload
+    }
   },
 });
 
