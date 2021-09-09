@@ -17,7 +17,8 @@ import {
   passwordValidator,
   validForm,
   setLocalUser,
-  setLocalToken
+  setLocalToken,
+  getFormErrors
 } from '../../utils/utils';
 
 const formInfo = {
@@ -37,7 +38,8 @@ const formInfo = {
 
 const alertInit = {
   formAlertOpen: false,
-  error: {}
+  type: '',
+  text: '',
 }
 
 function useQuery() {
@@ -49,18 +51,17 @@ const SignIn = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const queryParams = useQuery();
-  const [values, setValues] = useState(formInfo);
+  const [currentForm, setCurrentForm] = useState(formInfo);
   const [alertInfo, setAlertInfo] = useState(alertInit);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    var severity = "success", title = "Redirecting...", showAlert = false;
 
-    if (validForm(values)) {
+    if (validForm(currentForm)) {
       try {
         let token_data = await AuthService.login({
-          email: values.email.value,
-          password: values.password.value
+          email: currentForm.email.value,
+          password: currentForm.password.value
         });
 
         let user_data = await AuthService.get_user({
@@ -76,58 +77,53 @@ const SignIn = () => {
 
         let next = queryParams.get("next");
 
+        
+        setAlertInfo({ formAlertOpen: true, type: 'success', text: 'Redirecting...'});
+        closeAlert();
         history.push(next ? next : '/');
       } catch (error) {
         if (error.response && error.response.status === 400
           && !error.response.data.success
           && error.response.data.message === "invalid credentials!") {
-          severity = "warning";
-          title = "The credentials used are not valid!";
+          setAlertInfo({ formAlertOpen: true, type: 'error', text: 'The credentials used are not valid!'});
+          closeAlert();
         } else {
-          severity = "error";
-          title = "An error ocurred while logging in, please try again!";
+          setAlertInfo({ formAlertOpen: true, type: 'error', text: 'An error ocurred while logging in, please try again!'});
+          closeAlert();
         }
-        showAlert = true;
       }
     } else {
-      severity = "warning";
-      title = "Check the data entered it might be not valid!";
-      showAlert = true;
-    }
-
-    if (showAlert) {
-      setValues({
-        ...values,
-        error: {
-          severity,
-          title,
-        },
-        formAlertOpen: true,
-      });
+      setAlertInfo({ formAlertOpen: true, type: 'error', text: getFormErrors(currentForm)});
+      closeAlert();
     }
   };
 
+  const handleCreateAccount = () => {
+    history.push('/register');
+  }
+
+  const closeAlert = () => {
+    setTimeout(() => {
+      onCloseAlertForm();
+    }, 600);
+  }
+
   const onCloseAlertForm = () => {
     setAlertInfo({
-      ...values,
-      error: {
-        severity: "warning",
-        title: ""
-      },
       formAlertOpen: false,
+      type: '', 
+      text: ''
     });
   }
 
   const handleInputValue = (event) => {
     const { name, value } = event.target;
-    let { msg: error } = values[name].validator(value);
-
-    setValues({
-      ...values,
+    setCurrentForm({
+      ...currentForm,
       [name]: {
-        ...values[name],
-        error,
-        value
+        ...currentForm[name],
+        value: value,
+        error: currentForm[name].validator(value).msg
       }
     });
   };
@@ -139,13 +135,18 @@ const SignIn = () => {
   return (
     <Container component="main" maxWidth="xs" className={classes.signincont}>
       <CssBaseline />
-      {alertInfo.formAlertOpen &&
+      {alertInfo.formAlertOpen ?
         <Alert
-          severity={alertInfo.error.severity}
+          variant="filled" 
+          severity={alertInfo.type}
           onClose={onCloseAlertForm}
         >
-          {alertInfo.error.title}
-        </Alert>
+          { Array.isArray(alertInfo.text) ? 
+           alertInfo.text.map((item) => {
+           return (
+              <p>{item}</p>)
+           }) : <p>{alertInfo.text}</p> }
+        </Alert> : null
       }
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -168,10 +169,10 @@ const SignIn = () => {
             name="email"
             autoComplete="email"
             autoFocus
-            value={values.email.value}
+            value={currentForm.email.value}
             onChange={handleInputValue}
             onBlur={handleInputValue}
-            {...(values.email.error && { error: true, helperText: values.email.error })}
+            {...(currentForm.email.error && { error: true, helperText: currentForm.email.error })}
           />
           <TextField
             variant="outlined"
@@ -183,10 +184,10 @@ const SignIn = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={values.password.value}
+            value={currentForm.password.value}
             onChange={handleInputValue}
             onBlur={handleInputValue}
-            {...(values.password.error && { error: true, helperText: values.password.error })}
+            {...(currentForm.password.error && { error: true, helperText: currentForm.password.error })}
           />
           <Button
             type="submit"
@@ -197,6 +198,16 @@ const SignIn = () => {
             onClick={handleFormSubmit}
           >
             Sign In
+          </Button>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleCreateAccount}
+          >
+            Create your ReactEShop Account
           </Button>
           <Button
             type="button"
